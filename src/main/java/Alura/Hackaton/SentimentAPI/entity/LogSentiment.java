@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 
 @Table(name = "log_sentiment")
 @Entity
@@ -22,21 +23,22 @@ public class LogSentiment {
     private String texto;
 
     @Column(nullable = false, length = 30)
-    private String previcao;
+    private String previsao;
 
     // Probabilidade associada a previsao fica entre 0-1
     @Column(nullable = false)
     private Double probabilidade;
 
-    @Column(nullable = false, updatable = false)
-    private Instant criadoEm;
+    @Column(nullable = false, name = "criado_em")
+    private OffsetDateTime criadoEm;
 
     @Column(length = 50)
     private String origem;
 
+    @PrePersist
     public void prePersist() {
         if(criadoEm == null) {
-            criadoEm = Instant.now();
+            this.criadoEm = OffsetDateTime.now();
         }
     }
 }
