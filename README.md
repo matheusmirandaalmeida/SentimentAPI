@@ -57,24 +57,6 @@ Métricas
 Relatórios
 Re-treinamento de modelos
 
-SentimentAPI
-├── ds-service
-│   ├── app.py
-│   └── requirements.txt
-├── src/main/java
-│   └── Alura.Hackaton.SentimentAPI
-│       ├── client
-│       ├── config
-│       ├── controller
-│       ├── dto
-│       ├── entity
-│       ├── exception
-│       ├── repository
-│       └── service
-├── src/main/resources
-└── pom.xml
-
-
 🛠️ Tecnologias Utilizadas
 Backend
 
