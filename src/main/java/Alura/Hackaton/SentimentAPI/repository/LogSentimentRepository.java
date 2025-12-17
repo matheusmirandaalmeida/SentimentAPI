@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface LogSentimentRepository extends CrudRepository<LogSentiment, Long> {
 
-    List<LogSentiment> findByPrevicao(String previsao);
+    List<LogSentiment> findByPrevisao(String previsao);
 }
