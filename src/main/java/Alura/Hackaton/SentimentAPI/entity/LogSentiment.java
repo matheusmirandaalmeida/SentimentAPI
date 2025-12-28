@@ -1,44 +1,56 @@
 package Alura.Hackaton.SentimentAPI.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-
-@Table(name = "log_sentiment")
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class LogSentiment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 4000)
+    @Column(length = 2000)
     private String texto;
 
-    @Column(nullable = false, length = 30)
     private String previsao;
-
-    // Probabilidade associada a previsao fica entre 0-1
-    @Column(nullable = false)
-    private Double probabilidade;
-
-    @Column(nullable = false, name = "criado_em")
-    private OffsetDateTime criadoEm;
-
-    @Column(length = 50)
+    private double probabilidade;
     private String origem;
 
-    @PrePersist
-    public void prePersist() {
-        if(criadoEm == null) {
-            this.criadoEm = OffsetDateTime.now();
-        }
+    // 🔽 GETTERS E SETTERS (OBRIGATÓRIOS)
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    public void setTexto(String texto) {
+        this.texto = texto;
+    }
+
+    public String getPrevisao() {
+        return previsao;
+    }
+
+    public void setPrevisao(String previsao) {
+        this.previsao = previsao;
+    }
+
+    public double getProbabilidade() {
+        return probabilidade;
+    }
+
+    public void setProbabilidade(double probabilidade) {
+        this.probabilidade = probabilidade;
+    }
+
+    public String getOrigem() {
+        return origem;
+    }
+
+    public void setOrigem(String origem) {
+        this.origem = origem;
     }
 }
