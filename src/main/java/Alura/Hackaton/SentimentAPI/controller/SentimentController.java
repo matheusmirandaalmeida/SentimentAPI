@@ -28,7 +28,7 @@ public class SentimentController {
 
     @GetMapping("/dashboard")
     public SentimentDashboardResponse getDashboard() {
-        return new SentimentDashboardResponse(
+        return new SentimentDashboardResponse (
                 65,
                 25,
                 10,
