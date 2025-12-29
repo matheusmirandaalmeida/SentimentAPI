@@ -1,7 +1,9 @@
 package Alura.Hackaton.SentimentAPI.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
+@Component
 @ConfigurationProperties(prefix = "ds.service")
 public class DsServiceProperties {
     private String baseUrl;
@@ -13,4 +15,3 @@ public class DsServiceProperties {
     public String getPredictPath() { return predictPath; }
     public void setPredictPath(String predictPath) { this.predictPath = predictPath; }
 }
-

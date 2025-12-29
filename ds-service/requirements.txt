@@ -1,2 +1,6 @@
 fastapi
-uvicorn
+uvicorn[standard]
+numpy
+torch
+transformers
+scikit-learn

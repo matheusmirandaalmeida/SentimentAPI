@@ -1,14 +1,6 @@
 const form = document.querySelector("#formAvaliacao");
 
-function getAvaliacoes() {
-  return JSON.parse(localStorage.getItem("avaliacoes") || "[]");
-}
-
-function setAvaliacoes(lista) {
-  localStorage.setItem("avaliacoes", JSON.stringify(lista));
-}
-
-form.addEventListener("submit", (e) => {
+form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const empresa = document.querySelector("#empresa").value.trim();
@@ -19,23 +11,29 @@ form.addEventListener("submit", (e) => {
   const texto = document.querySelector("#avaliacao").value.trim();
   const termos = document.querySelector('input[name="termos"]').checked;
 
-  if (!termos) return;
+  if (!empresa || !vinculo || !situacao || !titulo || !texto || !termos) {
+    alert("Preencha todos os campos obrigatórios e aceite os termos.");
+    return;
+  }
 
-  const nova = {
-    id: crypto.randomUUID(),
-    nome: "Anônimo",
-    empresa,
-    vinculo,
-    situacao,
-    cargo,
-    titulo,
-    texto,
-    createdAt: new Date().toISOString()
-  };
+  const payload = { empresa, vinculo, situacao, cargo, titulo, texto };
 
-  const atual = getAvaliacoes();
-  atual.unshift(nova);
-  setAvaliacoes(atual);
+  try {
+    const resp = await fetch("/api/avaliacoes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  window.location.href = "avaliacoes.html";
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(`HTTP ${resp.status} - ${err}`);
+    }
+
+    await resp.json();
+    window.location.href = "/avaliacoes.html";
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao enviar avaliação: " + err.message);
+  }
 });
