@@ -1,34 +1,58 @@
 package Alura.Hackaton.SentimentAPI.client;
 
-import Alura.Hackaton.SentimentAPI.dto.SentimentResponseDTO;
-import Alura.Hackaton.SentimentAPI.exception.ExternalServiceException;
+import Alura.Hackaton.SentimentAPI.config.DsServiceProperties;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @Component
 public class SentimentClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final String url = "http://localhost:8000/predict";
+    private final RestTemplate restTemplate;
+    private final DsServiceProperties props;
 
-    public SentimentResponseDTO predict(String text) {
+    public SentimentClient(RestTemplate restTemplate, DsServiceProperties props) {
+        this.restTemplate = restTemplate;
+        this.props = props;
+    }
 
-        Map<String, String> body = Map.of("text", text);
+    public DsPredictResponse predict(String text) {
+        String url = props.getBaseUrl() + props.getPredictPath();
 
-        try {
-            return restTemplate.postForObject(
-                    url,
-                    body,
-                    SentimentResponseDTO.class
-            );
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        } catch (RestClientException ex) {
-            throw new ExternalServiceException(
-                    "Falha ao chamar serviço de Data Science", ex
-            );
-        }
+        DsPredictRequest body = new DsPredictRequest(text);
+        HttpEntity<DsPredictRequest> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<DsPredictResponse> response =
+                restTemplate.postForEntity(url, entity, DsPredictResponse.class);
+
+        return response.getBody();
+    }
+
+    public static class DsPredictRequest {
+        private String text;
+
+        public DsPredictRequest() {}
+        public DsPredictRequest(String text) { this.text = text; }
+
+        public String getText() { return text; }
+        public void setText(String text) { this.text = text; }
+    }
+
+    public static class DsPredictResponse {
+        private String label;     // "Positive"/"Negative"
+        private Double score;     // prob classe positiva
+        private Integer label_id; // 1 ou 0
+
+        public String getLabel() { return label; }
+        public void setLabel(String label) { this.label = label; }
+
+        public Double getScore() { return score; }
+        public void setScore(Double score) { this.score = score; }
+
+        public Integer getLabel_id() { return label_id; }
+        public void setLabel_id(Integer label_id) { this.label_id = label_id; }
     }
 }

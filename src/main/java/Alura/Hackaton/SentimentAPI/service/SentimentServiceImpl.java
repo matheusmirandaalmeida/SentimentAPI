@@ -1,5 +1,6 @@
 package Alura.Hackaton.SentimentAPI.service;
 
+import Alura.Hackaton.SentimentAPI.client.SentimentClient;
 import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
 import Alura.Hackaton.SentimentAPI.dto.SentimentResponseDTO;
 import Alura.Hackaton.SentimentAPI.entity.LogSentiment;
@@ -14,20 +15,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class SentimentServiceImpl implements SentimentService {
 
     private final LogSentimentRepository logRepository;
+    private final SentimentClient sentimentClient;
 
     @Override
     @Transactional
     public SentimentResponseDTO analyze(SentimentRequestDTO request) {
 
-        // 🔹 MOCK TEMPORÁRIO (SEM PYTHON)
+        // chama o DS
+        var ds = sentimentClient.predict(request.text());
 
-        // Variaveis com valores temporarios do MOCK (mais prático para edição futura)
-        //--------------------
-        String previsao = "POSITIVO";
-        double probabilidade = 0.94;
-        //--------------------
+        // mapeia "Positive/Negative" -> "POSITIVO/NEGATIVO"
+        String previsao = "NEGATIVO";
+        if (ds != null && ds.getLabel() != null && ds.getLabel().equalsIgnoreCase("Positive")) {
+            previsao = "POSITIVO";
+        }
 
-        SentimentResponseDTO response = new SentimentResponseDTO(previsao, probabilidade);
+        // monta resposta no DTO
+        SentimentResponseDTO response = new SentimentResponseDTO(
+                previsao,
+                ds != null && ds.getScore() != null ? ds.getScore() : 0.0
+        );
 
         LogSentimentData data = new LogSentimentData(
                 request.text(),

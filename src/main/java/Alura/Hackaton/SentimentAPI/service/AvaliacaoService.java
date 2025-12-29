@@ -1,6 +1,7 @@
 package Alura.Hackaton.SentimentAPI.service;
 
-import Alura.Hackaton.SentimentAPI.Sentimento;
+import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
+import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoCreateRequest;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoResponse;
 import Alura.Hackaton.SentimentAPI.entity.Avaliacao;
@@ -14,10 +15,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AvaliacaoService {
+
     private final AvaliacaoRepository repo;
-    // depois você injeta um client do DS aqui (RestClient/WebClient)
+    private final SentimentService sentimentService;
 
     public AvaliacaoResponse criar(AvaliacaoCreateRequest req) {
+
+        SentimentRequestDTO sreq = new SentimentRequestDTO(req.texto());
+
+        var sresp = sentimentService.analyze(sreq);
+
+        Sentimento sentimento = Sentimento.PENDENTE;
+        if ("POSITIVO".equalsIgnoreCase(sresp.previsao())) {
+            sentimento = Sentimento.POSITIVO;
+        } else if ("NEGATIVO".equalsIgnoreCase(sresp.previsao())) {
+            sentimento = Sentimento.NEGATIVO;
+        }
+
         Avaliacao a = Avaliacao.builder()
                 .empresa(req.empresa())
                 .vinculo(req.vinculo())
@@ -25,12 +39,12 @@ public class AvaliacaoService {
                 .cargo(req.cargo())
                 .titulo(req.titulo())
                 .texto(req.texto())
-                .sentimento(Sentimento.PENDENTE) //chamar DS e salvar POS/NEU/NEG
+                .sentimento(sentimento)
                 .createdAt(Instant.now())
                 .build();
 
         Avaliacao salvo = repo.save(a);
-        return toResponse(salvo);
+        return toResponse(salvo); // 👈 agora existe
     }
 
     public List<AvaliacaoResponse> listar(String empresa) {
