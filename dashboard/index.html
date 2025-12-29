@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard | Sentiment</title>
+
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="dashboard-page">
+
+  <main class="dashboard-container">
+
+    <!-- HEADER -->
+    <header class="header">
+
+      <!-- MÉTRICAS -->
+      <section class="metrics">
+
+        <div class="metric-card sentiment-card" data-sentiment="positive">
+          <span class="sentiment-title positive">POSITIVO</span>
+          <span class="sentiment-percent" id="positivePercent">0%</span>
+        </div>
+
+        <div class="metric-card sentiment-card" data-sentiment="neutral">
+          <span class="sentiment-title neutral">NEUTRO</span>
+          <span class="sentiment-percent" id="neutralPercent">0%</span>
+        </div>
+
+        <div class="metric-card sentiment-card" data-sentiment="negative">
+          <span class="sentiment-title negative">NEGATIVO</span>
+          <span class="sentiment-percent" id="negativePercent">0%</span>
+        </div>
+
+      </section>
+
+      <!-- USUÁRIO -->
+      <section class="user-card card">
+        <h4>Webster</h4>
+        <small>Admin</small>
+        <button onclick="logout()">Logout</button>
+      </section>
+
+    </header>
+
+    <!-- CONTENT -->
+    <section class="content">
+
+      <!-- GRÁFICO -->
+      <article class="card dashboard-card">
+        <h3>Sentimento Geral</h3>
+        <canvas id="sentimentChart"></canvas>
+      </article>
+
+      <!-- RESUMO -->
+      <article class="card summary-card">
+        <h3>Resumo</h3>
+
+        <div class="summary-header">
+          <strong id="summaryTitle">Selecione um sentimento</strong>
+          <span id="summaryInfo"></span>
+        </div>
+
+        <ul id="summaryList">
+          <!-- mensagens renderizadas via JS -->
+        </ul>
+      </article>
+
+    </section>
+
+  </main>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
