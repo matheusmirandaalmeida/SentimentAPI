@@ -1,8 +1,16 @@
 package Alura.Hackaton.SentimentAPI.entity;
 
+import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
+import Alura.Hackaton.SentimentAPI.dto.SentimentResponseDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class LogSentiment {
 
     @Id
@@ -16,41 +24,10 @@ public class LogSentiment {
     private double probabilidade;
     private String origem;
 
-    // 🔽 GETTERS E SETTERS (OBRIGATÓRIOS)
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTexto() {
-        return texto;
-    }
-
-    public void setTexto(String texto) {
-        this.texto = texto;
-    }
-
-    public String getPrevisao() {
-        return previsao;
-    }
-
-    public void setPrevisao(String previsao) {
-        this.previsao = previsao;
-    }
-
-    public double getProbabilidade() {
-        return probabilidade;
-    }
-
-    public void setProbabilidade(double probabilidade) {
-        this.probabilidade = probabilidade;
-    }
-
-    public String getOrigem() {
-        return origem;
-    }
-
-    public void setOrigem(String origem) {
-        this.origem = origem;
+    public LogSentiment(LogSentimentData data) {
+        this.texto = data.texto();
+        this.previsao = data.previsao();
+        this.probabilidade = data.probabilidade();
+        this.origem = data.origem();
     }
 }
