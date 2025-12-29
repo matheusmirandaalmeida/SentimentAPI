@@ -1,6 +1,6 @@
 package Alura.Hackaton.SentimentAPI.entity;
 
-import Alura.Hackaton.SentimentAPI.Sentimento;
+import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;

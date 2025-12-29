@@ -1,6 +1,6 @@
 package Alura.Hackaton.SentimentAPI.dto;
 
-import Alura.Hackaton.SentimentAPI.Sentimento;
+import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 
 import java.time.Instant;
 
