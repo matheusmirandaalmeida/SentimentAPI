@@ -1,8 +1,12 @@
 package Alura.Hackaton.SentimentAPI.client;
 
 import Alura.Hackaton.SentimentAPI.config.DsServiceProperties;
+import Alura.Hackaton.SentimentAPI.exception.ExternalServiceException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -17,18 +21,27 @@ public class SentimentClient {
     }
 
     public DsPredictResponse predict(String text) {
-        String url = props.getBaseUrl() + props.getPredictPath();
+        try{
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+            String url = props.getBaseUrl() + props.getPredictPath();
 
-        DsPredictRequest body = new DsPredictRequest(text);
-        HttpEntity<DsPredictRequest> entity = new HttpEntity<>(body, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        ResponseEntity<DsPredictResponse> response =
-                restTemplate.postForEntity(url, entity, DsPredictResponse.class);
+            DsPredictRequest body = new DsPredictRequest(text);
+            HttpEntity<DsPredictRequest> entity = new HttpEntity<>(body, headers);
 
-        return response.getBody();
+            ResponseEntity<DsPredictResponse> response =
+                    restTemplate.postForEntity(url, entity, DsPredictResponse.class);
+
+            return response.getBody();
+        } catch (RestClientException ex){
+            throw new ExternalServiceException(
+                    "Erro ao chamar o serviço de DataScience",
+                    ex
+            );
+        }
+
     }
 
     public static class DsPredictRequest {

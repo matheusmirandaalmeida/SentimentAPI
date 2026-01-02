@@ -3,21 +3,18 @@ package Alura.Hackaton.SentimentAPI.controller;
 import Alura.Hackaton.SentimentAPI.dto.*;
 import Alura.Hackaton.SentimentAPI.service.SentimentService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/sentiment")
 public class SentimentController {
-
     private final SentimentService sentimentService;
-
-    public SentimentController(SentimentService sentimentService) {
-        this.sentimentService = sentimentService;
-    }
 
     @PostMapping
     public ResponseEntity<SentimentResponseDTO> analyze(

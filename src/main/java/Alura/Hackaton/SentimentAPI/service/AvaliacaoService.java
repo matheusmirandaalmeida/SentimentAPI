@@ -5,6 +5,7 @@ import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoCreateRequest;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoResponse;
 import Alura.Hackaton.SentimentAPI.entity.Avaliacao;
+import Alura.Hackaton.SentimentAPI.exception.ResourceNotFoundException;
 import Alura.Hackaton.SentimentAPI.repository.AvaliacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,14 @@ public class AvaliacaoService {
 
     public AvaliacaoResponse criar(AvaliacaoCreateRequest req) {
 
-        SentimentRequestDTO sreq = new SentimentRequestDTO();
-        sreq.setText(req.texto());
+        SentimentRequestDTO sreq = new SentimentRequestDTO(req.texto());
 
         var sresp = sentimentService.analyze(sreq);
 
         Sentimento sentimento = Sentimento.PENDENTE;
-        if ("POSITIVO".equalsIgnoreCase(sresp.getPrevisao())) {
+        if ("POSITIVO".equalsIgnoreCase(sresp.previsao())) {
             sentimento = Sentimento.POSITIVO;
-        } else if ("NEGATIVO".equalsIgnoreCase(sresp.getPrevisao())) {
+        } else if ("NEGATIVO".equalsIgnoreCase(sresp.previsao())) {
             sentimento = Sentimento.NEGATIVO;
         }
 
@@ -58,7 +58,7 @@ public class AvaliacaoService {
 
     public AvaliacaoResponse buscarPorId(String id) {
         Avaliacao a = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Avaliação não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Avaliação não encontrada"));
         return toResponse(a);
     }
 
