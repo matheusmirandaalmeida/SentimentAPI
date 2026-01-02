@@ -1,10 +1,6 @@
 package Alura.Hackaton.SentimentAPI.entity;
 
-import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
-import Alura.Hackaton.SentimentAPI.dto.SentimentResponseDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

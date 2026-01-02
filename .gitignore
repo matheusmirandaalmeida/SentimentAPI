@@ -35,3 +35,6 @@ build/
 ### Ambiente Virtual Venv (Para linux) ###
 **/venv/
 **/__pycache__/
+
+### Pasta DS do arquivo Compactado do Docker
+DS
