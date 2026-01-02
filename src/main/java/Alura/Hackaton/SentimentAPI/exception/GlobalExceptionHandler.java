@@ -115,22 +115,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-
-    // 503 — O servidor não consegue processar a requisição no momento (DS)
-    @ExceptionHandler(ExternalServiceException.class)
-    public ResponseEntity<ErrorResponseDTO> handleExternal(
-            ExternalServiceException ex) {
-
-        return ResponseEntity
-                .status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(new ErrorResponseDTO(
-                        "Serviço de análise de sentimento indisponível no momento",
-                        ex.getMessage(),
-                        Instant.now()
-                )
-        );
-    }
-
     // 500 — erro inesperado
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGeneric(Exception ex) {
@@ -142,6 +126,21 @@ public class GlobalExceptionHandler {
                         Instant.now()
                 )
         );
+    }
+
+    // 503 — O servidor não consegue processar a requisição no momento (DS)
+    @ExceptionHandler(ExternalServiceException.class)
+    public ResponseEntity<ErrorResponseDTO> handleExternal(
+            ExternalServiceException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new ErrorResponseDTO(
+                                "Serviço de análise de sentimento indisponível no momento",
+                                ex.getMessage(),
+                                Instant.now()
+                        )
+                );
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
