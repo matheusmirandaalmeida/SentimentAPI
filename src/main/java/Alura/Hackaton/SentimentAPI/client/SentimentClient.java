@@ -1,69 +1,91 @@
 package Alura.Hackaton.SentimentAPI.client;
 
 import Alura.Hackaton.SentimentAPI.config.DsServiceProperties;
+<<<<<<< Updated upstream
+import Alura.Hackaton.SentimentAPI.exception.ExternalServiceException;
+import org.springframework.http.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
+=======
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.ResourceAccessException;
+>>>>>>> Stashed changes
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.Map;
 
 @Component
 public class SentimentClient {
 
-    private static final Logger log = LoggerFactory.getLogger(SentimentClient.class);
-
     private final RestTemplate restTemplate;
     private final DsServiceProperties props;
+    private final ObjectMapper objectMapper;
 
-    public SentimentClient(RestTemplate restTemplate, DsServiceProperties props) {
+    public SentimentClient(RestTemplate restTemplate, DsServiceProperties props, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.props = props;
+        this.objectMapper = objectMapper;
     }
 
     public DsPredictResponse predict(String text) {
-        String url = props.getBaseUrl() + props.getPredictPath();
+        try{
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+<<<<<<< Updated upstream
+            String url = props.getBaseUrl() + props.getPredictPath();
 
-        DsPredictRequest body = new DsPredictRequest(text);
-        HttpEntity<DsPredictRequest> entity = new HttpEntity<>(body, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        try {
+            DsPredictRequest body = new DsPredictRequest(text);
+            HttpEntity<DsPredictRequest> entity = new HttpEntity<>(body, headers);
+
             ResponseEntity<DsPredictResponse> response =
                     restTemplate.postForEntity(url, entity, DsPredictResponse.class);
 
-            DsPredictResponse respBody = response.getBody();
-            if (respBody == null) {
-                throw new RuntimeException("DS retornou body=null.");
+            return response.getBody();
+        } catch (RestClientException ex){
+            throw new ExternalServiceException(
+                    "Erro ao chamar o serviço de DataScience",
+                    ex
+            );
+        }
+
+    }
+=======
+        try {
+            String json = objectMapper.writeValueAsString(Map.of("text", text));
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(java.util.List.of(MediaType.APPLICATION_JSON));
+
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+
+            ResponseEntity<DsPredictResponse> resp =
+                    restTemplate.exchange(url, HttpMethod.POST, entity, DsPredictResponse.class);
+>>>>>>> Stashed changes
+
+            if (!resp.getStatusCode().is2xxSuccessful() || resp.getBody() == null) {
+                throw new RuntimeException("DS retornou " + resp.getStatusCode());
             }
-            return respBody;
+
+            return resp.getBody();
 
         } catch (HttpStatusCodeException ex) {
-            String dsBody = ex.getResponseBodyAsString();
-            log.error("Erro DS em {} -> HTTP {}: {}", url, ex.getStatusCode(), dsBody);
-            throw ex;
-
-        } catch (ResourceAccessException ex) {
-            log.error("DS indisponível em {}: {}", url, ex.getMessage());
-            throw ex;
+            throw new RuntimeException(
+                    "Erro chamando DS em " + url +
+                            " | status=" + ex.getStatusCode() +
+                            " | body=" + ex.getResponseBodyAsString(),
+                    ex
+            );
+        } catch (Exception ex) {
+            throw new RuntimeException("Falha chamando DS em " + url + ": " + ex.getMessage(), ex);
         }
-    }
-
-    public static class DsPredictRequest {
-        private String text;
-
-        public DsPredictRequest() {}
-        public DsPredictRequest(String text) { this.text = text; }
-
-        public String getText() { return text; }
-        public void setText(String text) { this.text = text; }
     }
 
     public static class DsPredictResponse {

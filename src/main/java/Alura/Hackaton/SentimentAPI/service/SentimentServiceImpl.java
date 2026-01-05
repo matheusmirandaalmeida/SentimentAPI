@@ -29,6 +29,7 @@ public class SentimentServiceImpl implements SentimentService {
     @Override
     @Transactional
     public SentimentResponseDTO analyze(SentimentRequestDTO request) {
+<<<<<<< Updated upstream
         //Preciso alterar essa parte para receber os valores do dataSciance
         String text = request.getText() == null ? "" : request.getText().trim();
         if (text.isBlank()) {
@@ -46,6 +47,28 @@ public class SentimentServiceImpl implements SentimentService {
             if (ds.getLabel() != null && ds.getLabel().equalsIgnoreCase("Positive")) {
                 previsao = "POSITIVO";
             }
+=======
+
+        var ds = sentimentClient.predict(request.getText());
+
+        String previsao;
+        if (ds.getLabelId() != null) {
+            previsao = (ds.getLabelId() == 1) ? "POSITIVO" : "NEGATIVO";
+        } else {
+            previsao = "Positive".equalsIgnoreCase(ds.getLabel()) ? "POSITIVO" : "NEGATIVO";
+        }
+
+        SentimentResponseDTO response = new SentimentResponseDTO();
+        response.setPrevisao(previsao);
+        response.setProbabilidade(ds.getScore() != null ? ds.getScore() : 0.0);
+
+        LogSentiment log = new LogSentiment();
+        log.setTexto(request.getText());
+        log.setPrevisao(response.getPrevisao());
+        log.setProbabilidade(response.getProbabilidade());
+        log.setOrigem("API");
+        logRepository.save(log);
+>>>>>>> Stashed changes
 
             SentimentResponseDTO response = new SentimentResponseDTO();
             response.setPrevisao(previsao);
