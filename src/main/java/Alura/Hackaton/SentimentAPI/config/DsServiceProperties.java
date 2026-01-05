@@ -1,12 +1,16 @@
 package Alura.Hackaton.SentimentAPI.config;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
-@Component
+@Validated
 @ConfigurationProperties(prefix = "ds.service")
 public class DsServiceProperties {
+    @NotBlank
     private String baseUrl;
+
+    @NotBlank
     private String predictPath;
 
     public String getBaseUrl() { return baseUrl; }
