@@ -1,9 +1,9 @@
 package Alura.Hackaton.SentimentAPI.service;
 
-import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
-import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoCreateRequest;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoResponse;
+import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
+import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.entity.Avaliacao;
 import Alura.Hackaton.SentimentAPI.repository.AvaliacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +26,11 @@ public class AvaliacaoService {
 
         var sresp = sentimentService.analyze(sreq);
 
-        Sentimento sentimento = Sentimento.PENDENTE;
-        if ("POSITIVO".equalsIgnoreCase(sresp.getPrevisao())) {
-            sentimento = Sentimento.POSITIVO;
-        } else if ("NEGATIVO".equalsIgnoreCase(sresp.getPrevisao())) {
-            sentimento = Sentimento.NEGATIVO;
-        }
+        Sentimento sentimento = switch (sresp.getPrevisao().toUpperCase()) {
+            case "POSITIVO" -> Sentimento.POSITIVO;
+            case "NEGATIVO" -> Sentimento.NEGATIVO;
+            default -> Sentimento.NEUTRO;
+        };
 
         Avaliacao a = Avaliacao.builder()
                 .empresa(req.empresa())
@@ -44,15 +43,13 @@ public class AvaliacaoService {
                 .createdAt(Instant.now())
                 .build();
 
-        Avaliacao salvo = repo.save(a);
-        return toResponse(salvo); // 👈 agora existe
+        return toResponse(repo.save(a));
     }
 
     public List<AvaliacaoResponse> listar(String empresa) {
         var lista = (empresa != null && !empresa.isBlank())
                 ? repo.findByEmpresaIgnoreCaseOrderByCreatedAtDesc(empresa)
                 : repo.findAllByOrderByCreatedAtDesc();
-
         return lista.stream().map(this::toResponse).toList();
     }
 
@@ -64,15 +61,8 @@ public class AvaliacaoService {
 
     private AvaliacaoResponse toResponse(Avaliacao a) {
         return new AvaliacaoResponse(
-                a.getId(),
-                a.getEmpresa(),
-                a.getVinculo(),
-                a.getSituacao(),
-                a.getCargo(),
-                a.getTitulo(),
-                a.getTexto(),
-                a.getSentimento(),
-                a.getCreatedAt()
+                a.getId(), a.getEmpresa(), a.getVinculo(), a.getSituacao(),
+                a.getCargo(), a.getTitulo(), a.getTexto(), a.getSentimento(), a.getCreatedAt()
         );
     }
 }
