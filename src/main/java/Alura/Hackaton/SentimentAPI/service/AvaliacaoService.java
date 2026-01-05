@@ -1,9 +1,9 @@
 package Alura.Hackaton.SentimentAPI.service;
 
-import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
-import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoCreateRequest;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoResponse;
+import Alura.Hackaton.SentimentAPI.dto.SentimentRequestDTO;
+import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.entity.Avaliacao;
 import Alura.Hackaton.SentimentAPI.repository.AvaliacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +21,22 @@ public class AvaliacaoService {
 
     public AvaliacaoResponse criar(AvaliacaoCreateRequest req) {
 
-        SentimentRequestDTO sreq = new SentimentRequestDTO();
-        sreq.setText(req.texto());
-
-        var sresp = sentimentService.analyze(sreq);
-
+        String texto = req.texto().trim();
         Sentimento sentimento = Sentimento.PENDENTE;
-        if ("POSITIVO".equalsIgnoreCase(sresp.getPrevisao())) {
-            sentimento = Sentimento.POSITIVO;
-        } else if ("NEGATIVO".equalsIgnoreCase(sresp.getPrevisao())) {
-            sentimento = Sentimento.NEGATIVO;
+
+        try {
+            SentimentRequestDTO sreq = new SentimentRequestDTO();
+            sreq.setText(texto);
+
+            var sresp = sentimentService.analyze(sreq);
+
+            if ("POSITIVO".equalsIgnoreCase(sresp.getPrevisao())) {
+                sentimento = Sentimento.POSITIVO;
+            } else if ("NEGATIVO".equalsIgnoreCase(sresp.getPrevisao())) {
+                sentimento = Sentimento.NEGATIVO;
+            }
+        } catch (Exception e) {
+            sentimento = Sentimento.PENDENTE;
         }
 
         Avaliacao a = Avaliacao.builder()
@@ -39,13 +45,13 @@ public class AvaliacaoService {
                 .situacao(req.situacao())
                 .cargo(req.cargo())
                 .titulo(req.titulo())
-                .texto(req.texto())
+                .texto(texto)
                 .sentimento(sentimento)
                 .createdAt(Instant.now())
                 .build();
 
         Avaliacao salvo = repo.save(a);
-        return toResponse(salvo); // 👈 agora existe
+        return toResponse(salvo);
     }
 
     public List<AvaliacaoResponse> listar(String empresa) {

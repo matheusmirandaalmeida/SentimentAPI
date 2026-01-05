@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericError(Exception ex) {
+        ex.printStackTrace(); // debug (remova em prod)
         Map<String, String> error = Map.of(
                 "message", "Erro interno no servidor.",
                 "code", "INTERNAL_ERROR"

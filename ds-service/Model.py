@@ -1,4 +1,3 @@
-#Importando as variáveis do arquivo de tokenização
 from Data_Tokening import X, Y, embedding_text
 
 #Realizando a divisão dos dados com 80% usado para treino

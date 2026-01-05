@@ -1,0 +1,18 @@
+# Python
+.venv
+**/__pycache__/
+
+# Java / Maven
+target
+
+# IDEs
+.idea
+.vscode
+
+# Git
+.git
+
+# Dados pesados
+**/*.zip
+**/*.csv
+**/*.pkl

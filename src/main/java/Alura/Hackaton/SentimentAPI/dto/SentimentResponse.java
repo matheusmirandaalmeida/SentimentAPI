@@ -12,20 +12,15 @@ public class SentimentResponse {
         this.probabilidade = probabilidade;
     }
 
-    // Getters
     public String getPrevisao() {
         return previsao;
     }
-
     public double getProbabilidade() {
         return probabilidade;
     }
-
-    // Setters
     public void setPrevisao(String previsao) {
         this.previsao = previsao;
     }
-
     public void setProbabilidade(double probabilidade) {
         this.probabilidade = probabilidade;
     }
