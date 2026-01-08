@@ -32,6 +32,11 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
@@ -60,7 +65,6 @@
 	</dependencies>
 
 	<build>
-		<!-- opcional, mas ajuda MUITO a evitar o "filtering" no application.properties -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -69,7 +73,6 @@
 		</resources>
 
 		<plugins>
-			<!-- AQUI está o que faltava: garantir UTF-8 na cópia de resources -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
