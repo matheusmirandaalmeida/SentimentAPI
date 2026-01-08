@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
+
 @RequiredArgsConstructor
 @Service
 public class SentimentServiceImpl implements SentimentService {
@@ -25,11 +27,12 @@ public class SentimentServiceImpl implements SentimentService {
     @Transactional
     public SentimentResponseDTO analyze(SentimentRequestDTO request) {
 
-        // Define limite de tamanho para o texto para evitar gargalos do DataScience
+        if (request == null || request.text() == null || request.text().isBlank()) {
+            throw new BusinessException("Texto não pode estar vazio");
+        }
+
         if (request.text().length() > MAX_TEXT_LENGTH) {
-            throw new BusinessException(
-                    "Texto excede o limite máximo de 3000 caracteres"
-            );
+            throw new BusinessException("Texto excede o limite máximo de 3000 caracteres");
         }
 
         // chama o DS
@@ -39,17 +42,22 @@ public class SentimentServiceImpl implements SentimentService {
             throw new ExternalServiceException("Resposta inválida do serviço de DataScience");
         }
 
-        // mapeia "Positive/Negative" -> "POSITIVO/NEGATIVO"
-        String previsao = "NEGATIVO";
-        if (ds != null && ds.getLabel() != null && ds.getLabel().equalsIgnoreCase("Positive")) {
-            previsao = "POSITIVO";
-        }
+        String labelNorm = ds.getLabel().trim().toUpperCase(Locale.ROOT);
+
+        // Mapeia 3 classes (com fallback seguro)
+        String previsao = switch (labelNorm) {
+            case "POSITIVE", "POSITIVO" -> "POSITIVO";
+            case "NEGATIVE", "NEGATIVO" -> "NEGATIVO";
+            case "NEUTRAL", "NEUTRO"   -> "NEUTRO";
+            default -> "NEUTRO"; // fallback pra nunca voltar PENDENTE por erro de label
+        };
+
+        double score = (ds.getScore() != null && !ds.getScore().isNaN())
+                ? ds.getScore()
+                : 0.0;
 
         // monta resposta no DTO
-        SentimentResponseDTO response = new SentimentResponseDTO(
-                previsao,
-                ds != null && ds.getScore() != null ? ds.getScore() : 0.0
-        );
+        SentimentResponseDTO response = new SentimentResponseDTO(previsao, score);
 
         LogSentimentData data = new LogSentimentData(
                 request.text(),
@@ -58,11 +66,8 @@ public class SentimentServiceImpl implements SentimentService {
                 "API"
         );
 
-        LogSentiment log = new LogSentiment(data);
-
-        logRepository.save(log);
+        logRepository.save(new LogSentiment(data));
 
         return response;
     }
 }
-

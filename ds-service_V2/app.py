@@ -1,105 +1,43 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import numpy as np
-import torch
 import pickle
 from pathlib import Path
 
-from transformers import RobertaTokenizer, RobertaModel
-from deep_translator import GoogleTranslator
+from Data_Tokening import embedding_text
+from Neutral_Class import Neutral_Definition
+from Translator import translate_commentary
 
-app = FastAPI(title="DS Sentiment Service (Pos/Neg/Neutro)")
+app = FastAPI(title="DS Sentiment Service V2")
 
 BASE_DIR = Path(__file__).resolve().parent
-
 MODEL_PATH = BASE_DIR / "Tuning_Model.pkl"
-
-MODEL_NAME = "roberta-base"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-tokenizer = RobertaTokenizer.from_pretrained(MODEL_NAME)
-bert_model = RobertaModel.from_pretrained(MODEL_NAME).to(device)
-bert_model.eval()
 
 with open(MODEL_PATH, "rb") as f:
     model = pickle.load(f)
 
-
-#Contrato HTTP
 class PredictRequest(BaseModel):
-    text: str  # <- mantém "text" pra bater com o Java
+    text: str
 
 class PredictResponse(BaseModel):
-    label: str       # "Positive" / "Negative" / "Neutral"
-    score: float     # confiança do top1
-    label_id: int    # 1, 0 ou 2 (aqui 2 = neutro)
-    translated: str  # texto traduzido que foi analisado
-
-
-#Tradução
-def translate_commentary(input_text: str) -> str:
-    try:
-        translator = GoogleTranslator(source="auto", target="en")
-        return translator.translate(input_text)
-    except Exception:
-        # Se falhar, segue com o texto original (não quebra a API)
-        return input_text
-
-
-#Embedding
-def embedding_text(texts: list[str]) -> np.ndarray:
-    all_embeddings = []
-
-    for i in range(0, len(texts), 32):
-        batch_texts = texts[i:i+32]
-
-        encoded_input = tokenizer(
-            batch_texts,
-            padding=True,
-            truncation=True,
-            max_length=128,
-            return_tensors="pt"
-        )
-        encoded_input = {k: v.to(device) for k, v in encoded_input.items()}
-
-        with torch.no_grad():
-            outputs = bert_model(**encoded_input)
-            batch_embeddings = outputs.last_hidden_state[:, 0, :]  # CLS
-
-        all_embeddings.append(batch_embeddings.cpu().numpy())
-
-    return np.vstack(all_embeddings)
-
-
-#Neutro
-def neutral_definition(forecast: int, model, X_emb: np.ndarray) -> tuple[str, float, int]:
-    proba = model.predict_proba(X_emb)[0]  # ex: [neg, pos]
-    sorted_idx = proba.argsort()[::-1]
-    top1 = float(proba[sorted_idx[0]])
-    top2 = float(proba[sorted_idx[1]])
-
-    threshold = 0.60
-    delta = 0.20
-
-    if top1 < threshold or (top1 - top2) < delta:
-        return "Neutral", top1, 2
-
-    if int(forecast) == 1:
-        return "Positive", top1, 1
-    return "Negative", top1, 0
-
+    label: str
+    score: float
+    label_id: int
+    translated: str
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
     translated = translate_commentary(req.text)
     X_emb = embedding_text([translated])
-    pred = int(model.predict(X_emb)[0])  # 0/1
-    label, score, label_id = neutral_definition(pred, model, X_emb)
+
+    forecast = int(model.predict(X_emb)[0])
+
+    label, score, label_id = Neutral_Definition(
+        forecast, model, X_emb
+    )
 
     return {
         "label": label,
