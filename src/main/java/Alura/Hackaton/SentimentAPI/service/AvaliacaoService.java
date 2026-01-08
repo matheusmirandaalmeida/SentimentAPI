@@ -31,6 +31,8 @@ public class AvaliacaoService {
             sentimento = Sentimento.POSITIVO;
         } else if ("NEGATIVO".equalsIgnoreCase(sresp.previsao())) {
             sentimento = Sentimento.NEGATIVO;
+        } else if ("NEUTRO".equalsIgnoreCase(sresp.previsao())) {
+            sentimento = Sentimento.NEUTRO;
         }
 
         Avaliacao a = Avaliacao.builder()
