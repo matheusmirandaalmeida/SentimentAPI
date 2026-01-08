@@ -1,6 +1,9 @@
-const form = document.querySelector("#formAvaliacao");
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "/login.html";
 
-form?.addEventListener("submit", async (e) => {
+const formComentarios = document.querySelector("#formAvaliacao");
+
+formComentarios?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const empresa = document.querySelector("#empresa").value.trim();
@@ -21,16 +24,21 @@ form?.addEventListener("submit", async (e) => {
   try {
     const resp = await fetch("/api/avaliacoes", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
       body: JSON.stringify(payload),
     });
 
     if (!resp.ok) {
       const err = await resp.text();
-      throw new Error(`HTTP ${resp.status} - ${err}`);
+      throw new Error(err || `HTTP ${resp.status}`);
     }
 
-    await resp.json();
+    // se o backend não retornar JSON, isso aqui QUEBRA/ não mexer
+    await resp.json().catch(() => null);
+
     window.location.href = "/avaliacoes.html";
   } catch (err) {
     console.error(err);

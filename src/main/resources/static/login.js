@@ -25,7 +25,7 @@ form.addEventListener("submit", async (e) => {
 
     if (data?.token) {
         localStorage.setItem("token", data.token);
-        window.location.href = "/dashboard.html"; // ou /comentarios.html
+        window.location.href = "/comentarios.html";
     } else {
         alert("Login ok, mas não recebi token.");
     }
