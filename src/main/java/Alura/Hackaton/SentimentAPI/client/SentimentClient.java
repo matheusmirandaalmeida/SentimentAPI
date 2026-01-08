@@ -1,16 +1,20 @@
 package Alura.Hackaton.SentimentAPI.client;
 
 import Alura.Hackaton.SentimentAPI.config.DsServiceProperties;
+import Alura.Hackaton.SentimentAPI.dto.DsPredictResponseWrapper;
 import Alura.Hackaton.SentimentAPI.exception.ExternalServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Component
 public class SentimentClient {
+
+    private static final Logger log = LoggerFactory.getLogger(SentimentClient.class);
 
     private final RestTemplate restTemplate;
     private final DsServiceProperties props;
@@ -20,52 +24,43 @@ public class SentimentClient {
         this.props = props;
     }
 
-    public DsPredictResponse predict(String text) {
-        try{
+    public DsPredictResponseWrapper predict(String text) {
+        String url = props.getBaseUrl() + props.getPredictPath();
 
-            String url = props.getBaseUrl() + props.getPredictPath();
+        log.info("📡 Chamando FastAPI: {}", url);
+        log.info("📝 Texto para análise: '{}'", text);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            Map<String, String> requestBody = Map.of("text", text);
 
-            DsPredictRequest body = new DsPredictRequest(text);
-            HttpEntity<DsPredictRequest> entity = new HttpEntity<>(body, headers);
+            log.debug("📦 Enviando JSON: {}", requestBody);
 
-            ResponseEntity<DsPredictResponse> response =
-                    restTemplate.postForEntity(url, entity, DsPredictResponse.class);
+            DsPredictResponseWrapper response = restTemplate.postForObject(
+                    url,
+                    requestBody,
+                    DsPredictResponseWrapper.class
+            );
 
-            return response.getBody();
-        } catch (RestClientException ex){
+            log.info("Resposta recebida do FastAPI");
+
+            if (response == null) {
+                throw new ExternalServiceException("Resposta vazia do FastAPI");
+            }
+
+            log.debug("Label: {}, Score: {}", response.getLabel(), response.getScore());
+            return response;
+
+        } catch (Exception e) {
+            log.error("Erro ao chamar FastAPI: {}", e.getMessage());
+
+            // Debug adicional
+            log.error("URL tentada: {}", url);
+            log.error("Request body: {{'text':'{}'}}", text);
+
             throw new ExternalServiceException(
-                    "Erro ao chamar o serviço de DataScience",
-                    ex
+                    "Falha ao chamar serviço de análise: " + e.getMessage(),
+                    e
             );
         }
-
-    }
-
-    public static class DsPredictRequest {
-        private String text;
-
-        public DsPredictRequest() {}
-        public DsPredictRequest(String text) { this.text = text; }
-
-        public String getText() { return text; }
-        public void setText(String text) { this.text = text; }
-    }
-
-    public static class DsPredictResponse {
-        private String label;     // "Positive"/"Negative"
-        private Double score;     // prob classe positiva
-        private Integer label_id; // 1 ou 0
-
-        public String getLabel() { return label; }
-        public void setLabel(String label) { this.label = label; }
-
-        public Double getScore() { return score; }
-        public void setScore(Double score) { this.score = score; }
-
-        public Integer getLabel_id() { return label_id; }
-        public void setLabel_id(Integer label_id) { this.label_id = label_id; }
     }
 }

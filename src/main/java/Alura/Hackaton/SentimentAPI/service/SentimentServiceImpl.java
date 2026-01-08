@@ -9,14 +9,16 @@ import Alura.Hackaton.SentimentAPI.exception.BusinessException;
 import Alura.Hackaton.SentimentAPI.exception.ExternalServiceException;
 import Alura.Hackaton.SentimentAPI.repository.LogSentimentRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Locale;
 
 @RequiredArgsConstructor
 @Service
 public class SentimentServiceImpl implements SentimentService {
+
+    private static final Logger log = LoggerFactory.getLogger(SentimentServiceImpl.class);
 
     private final LogSentimentRepository logRepository;
     private final SentimentClient sentimentClient;
@@ -26,7 +28,7 @@ public class SentimentServiceImpl implements SentimentService {
     @Override
     @Transactional
     public SentimentResponseDTO analyze(SentimentRequestDTO request) {
-
+        // Validação
         if (request == null || request.text() == null || request.text().isBlank()) {
             throw new BusinessException("Texto não pode estar vazio");
         }
@@ -35,39 +37,43 @@ public class SentimentServiceImpl implements SentimentService {
             throw new BusinessException("Texto excede o limite máximo de 3000 caracteres");
         }
 
-        // chama o DS
-        var ds = sentimentClient.predict(request.text());
+        log.info("Analisando sentimento para texto de {} caracteres", request.text().length());
 
-        if (ds == null || ds.getLabel() == null) {
-            throw new ExternalServiceException("Resposta inválida do serviço de DataScience");
+        try {
+            // Chamar serviço DS
+            var dsResponse = sentimentClient.predict(request.text());
+
+            if (dsResponse == null) {
+                throw new ExternalServiceException("Resposta inválida do serviço de DataScience");
+            }
+
+            // CORREÇÃO AQUI: Use getScore() em vez de getProbabilidade()
+            String previsao = dsResponse.getPrevisao();
+            double probabilidade = dsResponse.getScore() != null ? dsResponse.getScore() : 0.0;
+
+            log.info("Análise concluída: {} com {:.2f}% de confiança",
+                    previsao, probabilidade * 100);
+
+            SentimentResponseDTO response = new SentimentResponseDTO(previsao, probabilidade);
+
+            // Log no banco
+            LogSentimentData data = new LogSentimentData(
+                    request.text(),
+                    response.previsao(),
+                    response.probabilidade(),
+                    "API"
+            );
+
+            logRepository.save(new LogSentiment(data));
+
+            return response;
+
+        } catch (ExternalServiceException ex) {
+            log.error("Erro no serviço externo de análise: {}", ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Erro inesperado durante análise de sentimento", ex);
+            throw new BusinessException("Erro interno ao processar análise de sentimento");
         }
-
-        String labelNorm = ds.getLabel().trim().toUpperCase(Locale.ROOT);
-
-        // Mapeia 3 classes (com fallback seguro)
-        String previsao = switch (labelNorm) {
-            case "POSITIVE", "POSITIVO" -> "POSITIVO";
-            case "NEGATIVE", "NEGATIVO" -> "NEGATIVO";
-            case "NEUTRAL", "NEUTRO"   -> "NEUTRO";
-            default -> "NEUTRO"; // fallback pra nunca voltar PENDENTE por erro de label
-        };
-
-        double score = (ds.getScore() != null && !ds.getScore().isNaN())
-                ? ds.getScore()
-                : 0.0;
-
-        // monta resposta no DTO
-        SentimentResponseDTO response = new SentimentResponseDTO(previsao, score);
-
-        LogSentimentData data = new LogSentimentData(
-                request.text(),
-                response.previsao(),
-                response.probabilidade(),
-                "API"
-        );
-
-        logRepository.save(new LogSentiment(data));
-
-        return response;
     }
 }

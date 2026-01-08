@@ -1,28 +1,51 @@
+version: '3.8'
+
 services:
   ds-service:
     build:
-      context: ./ds-service_V2
+      context: ./ds_service_V2
       dockerfile: Dockerfile
+    container_name: sentiment-ds-service
     ports:
       - "8000:8000"
-    volumes:
-      - hf-cache:/app/.cache/huggingface
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT=8000
+    # Remova volumes de desenvolvimento se não precisar
+    # volumes:
+    #   - ./ds_service_V2:/app
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()\""]
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 20
+      retries: 5
       start_period: 30s
+    networks:
+      - sentiment-network
 
   sentiment-api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sentiment-api
     ports:
       - "8080:8080"
     environment:
-      DS_SERVICE_BASE_URL: http://ds-service:8000
+      - SPRING_PROFILES_ACTIVE=docker
+      - DS_SERVICE_BASE_URL=http://ds-service:8000
+      - JAVA_OPTS=-Xmx512m -Xms256m -Dlogging.level.Alura.Hackaton=DEBUG
     depends_on:
       ds-service:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    networks:
+      - sentiment-network
 
-volumes:
-  hf-cache:
+networks:
+  sentiment-network:
+    driver: bridge

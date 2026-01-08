@@ -16,30 +16,10 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
-                .headers(h -> h.frameOptions(f -> f.sameOrigin()))
+                .headers(h -> h.frameOptions(f -> f.disable()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-
-                        // 🔓 front + auth + h2
-                        .requestMatchers(
-                                "/", "/index.html",
-                                "/**/*.html",
-                                "/**/*.css",
-                                "/**/*.js",
-                                "/favicon.ico",
-                                "/auth/**",
-                                "/health",
-                                "/h2-console/**"
-                        ).permitAll()
-
-                        //GET público
-                        .requestMatchers(HttpMethod.GET, "/api/avaliacoes/**").permitAll()
-                        //Daqui para frente precisa estar logado
-                        .requestMatchers(HttpMethod.POST, "/api/avaliacoes/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/avaliacoes/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/avaliacoes/**").authenticated()
-
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // PERMITE TUDO - APENAS PARA DESENVOLVIMENTO
                 )
                 .build();
     }
