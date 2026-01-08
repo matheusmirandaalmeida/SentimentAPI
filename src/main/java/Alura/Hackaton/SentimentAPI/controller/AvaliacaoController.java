@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/avaliacoes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // depois você restringe pro seu front
+@CrossOrigin(origins = "*")
 public class AvaliacaoController {
 
     private final AvaliacaoService service;
