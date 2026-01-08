@@ -23,7 +23,6 @@ public class AvaliacaoService {
     public AvaliacaoResponse criar(AvaliacaoCreateRequest req) {
 
         SentimentRequestDTO sreq = new SentimentRequestDTO(req.texto());
-
         var sresp = sentimentService.analyze(sreq);
 
         Sentimento sentimento = Sentimento.PENDENTE;
@@ -45,15 +44,24 @@ public class AvaliacaoService {
                 .build();
 
         Avaliacao salvo = repo.save(a);
-        return toResponse(salvo); // 👈 agora existe
+        return toResponse(salvo);
     }
 
-    public List<AvaliacaoResponse> listar(String empresa) {
+    // ✅ LISTAR com filtro e limit (limit=0 retorna tudo)
+    public List<AvaliacaoResponse> listar(String empresa, int limit) {
         var lista = (empresa != null && !empresa.isBlank())
                 ? repo.findByEmpresaIgnoreCaseOrderByCreatedAtDesc(empresa)
                 : repo.findAllByOrderByCreatedAtDesc();
 
-        return lista.stream().map(this::toResponse).toList();
+        return lista.stream()
+                .limit(limit > 0 ? limit : Long.MAX_VALUE)
+                .map(this::toResponse)
+                .toList();
+    }
+
+    // ✅ ATALHO opcional: listar tudo (ou por empresa) sem limit
+    public List<AvaliacaoResponse> listar(String empresa) {
+        return listar(empresa, 0);
     }
 
     public AvaliacaoResponse buscarPorId(String id) {

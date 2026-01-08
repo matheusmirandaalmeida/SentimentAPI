@@ -1,6 +1,7 @@
 package Alura.Hackaton.SentimentAPI.controller;
 
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoCreateRequest;
+import Alura.Hackaton.SentimentAPI.dto.AvaliacaoDTO;
 import Alura.Hackaton.SentimentAPI.dto.AvaliacaoResponse;
 import Alura.Hackaton.SentimentAPI.service.AvaliacaoService;
 import jakarta.validation.Valid;
@@ -23,8 +24,11 @@ public class AvaliacaoController {
     }
 
     @GetMapping
-    public List<AvaliacaoResponse> listar(@RequestParam(required = false) String empresa) {
-        return service.listar(empresa);
+    public List<AvaliacaoResponse> listar(
+            @RequestParam(required = false) String empresa,
+            @RequestParam(defaultValue = "0") int limit
+    ) {
+        return service.listar(empresa, limit);
     }
 
     @GetMapping("/{id}")

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sentiment • Landing</title>
+    <link rel="stylesheet" href="/landing.css" />
+</head>
+<body>
+
+<header class="topbar">
+    <div class="wrap topbar__inner">
+        <a class="brand" href="/">Sentiment</a>
+
+        <nav class="nav">
+            <a class="nav__link" href="/comentarios.html">Escreva uma avaliação</a>
+            <a class="nav__link" href="/login.html">Acessar</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="wrap hero__inner">
+            <h1 class="hero__title">Procurando emprego?</h1>
+            <p class="hero__subtitle">
+                Descubra a realidade antes de se candidatar<br />
+                <strong>ou conte a sua experiência.</strong>
+            </p>
+
+            <div class="loginCard">
+                <h2 class="loginCard__title">Mais transparência hoje, melhores escolhas amanhã</h2>
+
+                <div class="loginCard__row">
+                    <p class="loginCard__text">
+                        Colabore conosco e ajude a fazer a diferença.
+                    </p>
+
+                    <a class="btn" href="/login.html">Faça Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="preview" aria-label="Avaliações">
+        <div class="wrap">
+            <div class="preview__panel">
+
+                <!-- aqui o JS vai inserir os cards -->
+                <div id="reviews" class="reviews"></div>
+
+                <!-- fallback caso não carregue -->
+                <p id="reviewsStatus" class="status">Carregando avaliações…</p>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="wrap footer__inner">
+        Rodapé: aqui faça um rodapé profissional
+    </div>
+</footer>
+
+<script src="/landing.js"></script>
+</body>
+</html>

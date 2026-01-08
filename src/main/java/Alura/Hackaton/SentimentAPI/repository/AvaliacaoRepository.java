@@ -8,4 +8,5 @@ import java.util.List;
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, String> {
     List<Avaliacao> findByEmpresaIgnoreCaseOrderByCreatedAtDesc(String empresa);
     List<Avaliacao> findAllByOrderByCreatedAtDesc();
+    List<Avaliacao> findTop3ByOrderByIdDesc();
 }

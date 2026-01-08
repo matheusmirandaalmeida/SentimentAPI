@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #E8E7F7, #99AFF5);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    background: #fff;
+    width: 320px;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    text-align: center;
+    color: #4A80F5;
+    margin-bottom: 25px;
+}
+
+.card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.card input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.card input:focus {
+    outline: none;
+    border-color: #4A80F5;
+}
+
+.card button {
+    background: #4A80F5;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card button:hover {
+    background: #3b6fe0;
+}
+
+.switch {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.switch a {
+    color: #4A80F5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.switch a:hover {
+    text-decoration: underline;
+}
