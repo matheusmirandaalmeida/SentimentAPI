@@ -25,7 +25,6 @@ def embedding_text(texts):
     if len(texts) == 0:
         return np.empty((0, 768), dtype=np.float32)
 
-    # Garante que tudo é string
     texts = ["" if t is None else str(t) for t in texts]
 
     all_embeddings = []
@@ -47,7 +46,7 @@ def embedding_text(texts):
         # inferência mais eficiente
         with torch.inference_mode():
             outputs = bert_model(**encoded)
-            cls_emb = outputs.last_hidden_state[:, 0, :]  # (batch, 768)
+            cls_emb = outputs.last_hidden_state[:, 0, :]
 
         all_embeddings.append(cls_emb.cpu().numpy().astype(np.float32))
 

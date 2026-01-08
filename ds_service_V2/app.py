@@ -110,7 +110,7 @@ def predict(req: PredictRequest):
         )
 
     except Exception as e:
-        print(f"❌ Erro: {e}")
+        print(f" Erro: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
