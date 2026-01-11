@@ -9,80 +9,80 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="dashboard-page">
-  <main class="dashboard-container">
+<body class="pagina-dashboard">
+  <main class="container-dashboard">
 
-    <!-- HEADER -->
-    <header class="dashboard-header">
-      <div class="header-content">
-        <div class="logo-section">
+    <!-- CABEÇALHO -->
+    <header class="cabecalho-dashboard">
+      <div class="conteudo-cabecalho">
+        <div class="secao-logo">
           <h1><i class="fas fa-chart-line"></i> Sentiment Dashboard</h1>
-          <p class="subtitle">Análise de sentimentos em tempo real</p>
+          <p class="subtitulo">Análise de sentimentos em tempo real</p>
         </div>
         
-        <div class="user-section">
-          <div class="user-info">
-            <div class="user-avatar">
+        <div class="secao-usuario">
+          <div class="info-usuario">
+            <div class="avatar-usuario">
               <i class="fas fa-user-circle"></i>
             </div>
-            <div class="user-details">
-              <span class="user-name" id="usuario"></span>
-              <span class="user-role">Admin</span>
+            <div class="detalhes-usuario">
+              <span class="nome-usuario">Webster</span>
+              <span class="funcao-usuario">Admin</span>
             </div>
           </div>
-          <button class="logout-btn" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> Logout
+          <button class="botao-sair" onclick="sair()">
+            <i class="fas fa-sign-out-alt"></i> Sair
           </button>
         </div>
       </div>
     </header>
 
     <!-- MÉTRICAS DE SENTIMENTO -->
-    <section class="sentiment-metrics">
-      <div class="metrics-grid">
+    <section class="metricas-sentimento">
+      <div class="grid-metricas">
         <!-- Card Positivo -->
-        <div class="metric-card positive-card" data-sentiment="positive">
-          <div class="metric-icon">
+        <div class="cartao-metrica cartao-positivo" data-sentimento="positivo">
+          <div class="icone-metrica">
             <i class="fas fa-smile"></i>
           </div>
-          <div class="metric-content">
-            <span class="metric-label">POSITIVO</span>
-            <div class="metric-value">
-              <span class="percent" id="positivePercent">0%</span>
-              <div class="progress-bar">
-                <div class="progress-fill positive-progress"></div>
+          <div class="conteudo-metrica">
+            <span class="rotulo-metrica">POSITIVO</span>
+            <div class="valor-metrica">
+              <span class="porcentagem" id="porcentagem-positivo">0%</span>
+              <div class="barra-progresso">
+                <div class="preenchimento-progresso progresso-positivo"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Card Neutro -->
-        <div class="metric-card neutral-card" data-sentiment="neutral">
-          <div class="metric-icon">
+        <div class="cartao-metrica cartao-neutro" data-sentimento="neutro">
+          <div class="icone-metrica">
             <i class="fas fa-meh"></i>
           </div>
-          <div class="metric-content">
-            <span class="metric-label">NEUTRO</span>
-            <div class="metric-value">
-              <span class="percent" id="neutralPercent">0%</span>
-              <div class="progress-bar">
-                <div class="progress-fill neutral-progress"></div>
+          <div class="conteudo-metrica">
+            <span class="rotulo-metrica">NEUTRO</span>
+            <div class="valor-metrica">
+              <span class="porcentagem" id="porcentagem-neutro">0%</span>
+              <div class="barra-progresso">
+                <div class="preenchimento-progresso progresso-neutro"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Card Negativo -->
-        <div class="metric-card negative-card" data-sentiment="negative">
-          <div class="metric-icon">
+        <div class="cartao-metrica cartao-negativo" data-sentimento="negativo">
+          <div class="icone-metrica">
             <i class="fas fa-frown"></i>
           </div>
-          <div class="metric-content">
-            <span class="metric-label">NEGATIVO</span>
-            <div class="metric-value">
-              <span class="percent" id="negativePercent">0%</span>
-              <div class="progress-bar">
-                <div class="progress-fill negative-progress"></div>
+          <div class="conteudo-metrica">
+            <span class="rotulo-metrica">NEGATIVO</span>
+            <div class="valor-metrica">
+              <span class="porcentagem" id="porcentagem-negativo">0%</span>
+              <div class="barra-progresso">
+                <div class="preenchimento-progresso progresso-negativo"></div>
               </div>
             </div>
           </div>
@@ -91,66 +91,66 @@
     </section>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <section class="dashboard-content">
+    <section class="conteudo-dashboard">
       <!-- GRÁFICO -->
-      <div class="main-card chart-card">
-        <div class="card-header">
+      <div class="cartao-principal cartao-grafico">
+        <div class="cabecalho-cartao">
           <h3><i class="fas fa-chart-pie"></i> Sentimento Geral</h3>
-          <div class="card-actions">
-            <select class="time-select">
+          <div class="acoes-cartao">
+            <select class="selecao-tempo">
               <option>Últimos 7 dias</option>
               <option>Últimos 30 dias</option>
               <option>Últimos 90 dias</option>
             </select>
           </div>
         </div>
-        <div class="chart-container">
-          <canvas id="sentimentChart"></canvas>
+        <div class="container-grafico">
+          <canvas id="grafico-sentimento"></canvas>
         </div>
       </div>
 
       <!-- RESUMO -->
-      <div class="main-card summary-card">
-        <div class="card-header">
+      <div class="cartao-principal cartao-resumo">
+        <div class="cabecalho-cartao">
           <h3><i class="fas fa-file-alt"></i> Resumo</h3>
-          <div class="summary-filter">
-            <span class="filter-label">Filtro:</span>
-            <div class="sentiment-tags">
-              <span class="tag positive-tag active" data-sentiment="positive">Positivo</span>
-              <span class="tag neutral-tag" data-sentiment="neutral">Neutro</span>
-              <span class="tag negative-tag" data-sentiment="negative">Negativo</span>
+          <div class="filtro-resumo">
+            <span class="rotulo-filtro">Filtro:</span>
+            <div class="etiquetas-sentimento">
+              <span class="etiqueta etiqueta-positiva ativa" data-sentimento="positivo">Positivo</span>
+              <span class="etiqueta etiqueta-neutra" data-sentimento="neutro">Neutro</span>
+              <span class="etiqueta etiqueta-negativa" data-sentimento="negativo">Negativo</span>
             </div>
           </div>
         </div>
         
-        <div class="summary-content">
-          <div class="summary-header">
-            <h4 id="summaryTitle">Selecione um sentimento</h4>
-            <span class="summary-info" id="summaryInfo"></span>
+        <div class="conteudo-resumo">
+          <div class="cabecalho-resumo">
+            <h4 id="titulo-resumo">Selecione um sentimento</h4>
+            <span class="info-resumo" id="info-resumo"></span>
           </div>
           
-          <div class="summary-list-container">
-            <ul id="summaryList" class="summary-list">
-              <!-- Conteúdo será carregado via JavaScript -->
-              <li class="empty-state">
+          <div class="container-lista-resumo">
+            <ul id="lista-resumo" class="lista-resumo">
+              <!-- conteudo será preenchido pelo js -->
+              <li class="estado-vazio">
                 <i class="fas fa-info-circle"></i>
                 <p>Selecione um tipo de sentimento acima para ver os detalhes</p>
               </li>
             </ul>
           </div>
           
-          <div class="summary-actions">
-            <button class="btn-action"><i class="fas fa-download"></i> Exportar</button>
-            <button class="btn-action primary"><i class="fas fa-chart-bar"></i> Ver Detalhes</button>
+          <div class="acoes-resumo">
+            <button class="botao-acao"><i class="fas fa-download"></i> Exportar</button>
+            <button class="botao-acao primario"><i class="fas fa-chart-bar"></i> Ver Detalhes</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="dashboard-footer">
-      <p>© 2026 Sentiment Analytics. Todos os direitos reservados.</p>
-      <p class="last-updated">Última atualização: <span id="lastUpdate">Hoje às 14:30</span></p>
+    <!-- RODAPÉ -->
+    <footer class="rodape-dashboard">
+      <p>© 2024 Sentiment Analytics. Todos os direitos reservados.</p>
+      <p class="ultima-atualizacao">Última atualização: <span id="ultima-atualizacao">Hoje às 14:30</span></p>
     </footer>
   </main>
 
