@@ -31,14 +31,15 @@
             </p>
 
             <div class="loginCard" role="region" aria-label="Chamada para ação">
-                <h2 class="loginCard__title">Mais transparência hoje, melhores escolhas amanhã</h2>
-
                 <div class="loginCard__row">
+                  <h2 class="loginCard__title">Mais transparência hoje, melhores escolhas amanhã</h2>
                     <p class="loginCard__text">
-                        Colabore conosco e ajude a fazer a diferença. Avaliações reais de quem já trabalhou lá.
+                        Colabore conosco e faça a diferença
                     </p>
-
                     <a class="btn" href="/login.html" role="button">Faça Login</a>
+                </div>
+                <div class="image-sharing">
+                  <img src="image.png" alt="Exemplo de img" id="imagem-compartilhar">
                 </div>
             </div>
         </div>
@@ -50,16 +51,16 @@
 
             <div class="preview__panel">
                 <div id="reviews" class="reviews" role="list" aria-label="Lista de avaliações">
-                    <!-- Aqui o JavaScript vai inserir os cards -->
+                    <!-- cards -->
                 </div>
 
-                <!-- Loading state -->
+                <!-- Loading state - efeito de carrecamento -->
                 <div id="reviewsStatus" class="status loading" role="status" aria-live="polite">
                     <div class="spinner" aria-hidden="true"></div>
                     <span>Carregando avaliações...</span>
                 </div>
 
-                <!-- Error state (inicialmente escondido) -->
+                <!-- Error state, fica escondido no inicio -->
                 <div id="reviewsError" class="status error" style="display: none;" role="alert">
                     <p>Não foi possível carregar as avaliações. <button onclick="carregarAvaliacoes()">Tentar novamente</button></p>
                 </div>
@@ -74,7 +75,7 @@
 
 <footer class="footer" role="contentinfo">
     <div class="wrap footer__inner">
-        <p>&copy; 2024 Sentiment. Plataforma de avaliações transparentes.</p>
+        <p>&copy; 2026 Sentiment. Plataforma de avaliações transparentes.</p>
         <p>
             <a href="/sobre.html" style="color: #fff; opacity: 0.8;">Sobre</a> •
             <a href="/privacidade.html" style="color: #fff; opacity: 0.8;">Privacidade</a> •
