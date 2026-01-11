@@ -3,10 +3,11 @@ async function carregarAvaliacoes() {
     const status = document.getElementById("reviewsStatus");
 
     try {
-        const resp = await fetch("/api/avaliacoes?limit=10");
+        // Usa a URL correta da API Spring
+        const resp = await fetch("http://localhost:8080/api/avaliacoes?limit=3");
         if (!resp.ok) throw new Error("HTTP " + resp.status);
 
-        const data = await resp.json(); // espera: [{nomeUsuario, empresa, texto, ...}, ...]
+        const data = await resp.json();
 
         container.innerHTML = "";
 
@@ -17,33 +18,60 @@ async function carregarAvaliacoes() {
 
         status.textContent = "";
         for (const item of data) {
-            const nome = item.nomeUsuario ?? "Usuário";
+            // Usa os campos corretos da API Spring
             const empresa = item.empresa ?? "Empresa";
+            const cargo = item.cargo ? ` • ${item.cargo}` : "";
+            const titulo = item.titulo ?? "Sem título";
+            const sentimento = item.sentimento ?? "";
+            const vinculo = item.vinculo ?? "";
+            const situacao = item.situacao ?? "";
             const texto = item.texto ?? "(sem texto)";
 
             const el = document.createElement("article");
             el.className = "review";
             el.innerHTML = `
-        <p class="review__meta">Nome do usuário</p>
-        <p class="review__meta">${escapeHtml(nome)}</p>
+                <div class="review__header">
+                    <p class="review__meta">
+                        <strong>${escapeHtml(empresa)}</strong>${escapeHtml(cargo)}
+                        <span class="sentiment-badge sentiment-${sentimento.toLowerCase()}">
+                            ${escapeHtml(sentimento)}
+                        </span>
+                    </p>
+                    <p class="review__title">${escapeHtml(titulo)}</p>
+                </div>
 
-        <p class="review__meta" style="margin-top:10px;">Nome da empresa que ele trabalha</p>
-        <p class="review__meta">${escapeHtml(empresa)}</p>
-
-        <div class="review__box">
-          <p class="review__text">${escapeHtml(texto)}</p>
-          <small class="review__small">Avaliação do usuários</small>
-        </div>
-      `;
+                <div class="review__box">
+                    <p class="review__text">${escapeHtml(texto)}</p>
+                    <small class="review__small">
+                        ${escapeHtml(vinculo)} • ${escapeHtml(situacao)} •
+                        ${formatarData(item.createdAt)}
+                    </small>
+                </div>
+            `;
             container.appendChild(el);
         }
     } catch (e) {
         status.textContent = "Não foi possível carregar as avaliações agora.";
-        console.error(e);
+        console.error("Erro ao carregar avaliações:", e);
+    }
+}
+
+function formatarData(isoString) {
+    if (!isoString) return "Data não disponível";
+    try {
+        const data = new Date(isoString);
+        return data.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    } catch {
+        return "Data inválida";
     }
 }
 
 function escapeHtml(str) {
+    if (str === null || str === undefined) return "";
     return String(str)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -52,4 +80,5 @@ function escapeHtml(str) {
         .replaceAll("'", "&#039;");
 }
 
-carregarAvaliacoes();
+// Carrega as avaliações quando a página carrega
+document.addEventListener('DOMContentLoaded', carregarAvaliacoes);

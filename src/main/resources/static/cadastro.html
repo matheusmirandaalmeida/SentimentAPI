@@ -2,31 +2,261 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro</title>
+    <title>Sentiment • Cadastro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/login.css">
+    <meta name="description" content="Crie sua conta no Sentiment para avaliar empresas.">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        /* Estilos específicos para cadastro */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f6f7f9 0%, #e8ecf6 100%);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px 32px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0 0 8px 0;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .auth-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #000;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .form-error {
+            font-size: 12px;
+            color: #ef4444;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .auth-button {
+            width: 100%;
+            height: 44px;
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .auth-button:hover {
+            background: #1f2937;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .auth-button:active {
+            transform: translateY(0);
+        }
+
+        .auth-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .auth-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            display: block;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+
+        .password-info {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <a href="/" class="auth-logo">Sentiment</a>
+            <h1 class="auth-title">Criar Conta</h1>
+            <p class="auth-subtitle">Junte-se à nossa comunidade de avaliações transparentes</p>
+        </div>
 
-<div class="container">
-    <div class="card">
-        <h2>Criar Conta</h2>
+        <div id="message" class="message"></div>
 
-        <form id="formCadastro">
-            <input id="nomeCadastro" type="text" placeholder="Nome completo" required>
-            <input id="emailCadastro" type="email" placeholder="E-mail" required>
-            <input id="senhaCadastro" type="password" placeholder="Senha" required>
-            <button type="submit">Cadastrar</button>
+        <form id="formCadastro" class="auth-form" novalidate>
+            <div class="form-group">
+                <label for="emailCadastro" class="form-label">E-mail</label>
+                <input
+                        id="emailCadastro"
+                        type="email"
+                        class="form-input"
+                        placeholder="seu@email.com"
+                        required
+                        autocomplete="email"
+                >
+                <div id="emailError" class="form-error">Por favor, insira um e-mail válido</div>
+            </div>
+
+            <div class="form-group">
+                <label for="senhaCadastro" class="form-label">Senha</label>
+                <input
+                        id="senhaCadastro"
+                        type="password"
+                        class="form-input"
+                        placeholder="Mínimo 6 caracteres"
+                        required
+                        minlength="6"
+                        autocomplete="new-password"
+                >
+                <div id="senhaError" class="form-error">A senha deve ter pelo menos 6 caracteres</div>
+                <p class="password-info">Use letras, números e símbolos para maior segurança</p>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
+                <input
+                        id="confirmarSenha"
+                        type="password"
+                        class="form-input"
+                        placeholder="Digite a senha novamente"
+                        required
+                        autocomplete="new-password"
+                >
+                <div id="confirmarError" class="form-error">As senhas não coincidem</div>
+            </div>
+
+            <button type="submit" class="auth-button" id="submitBtn">
+                <span id="btnText">Criar Conta</span>
+                <div id="btnSpinner" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+            </button>
         </form>
 
-        <p class="switch">
-            Já tem conta?
-            <a href="/login.html">Fazer login</a>
-        </p>
-
-        <script src="/cadastro.js"></script>
+        <div class="auth-footer">
+            <p>
+                Já tem uma conta?
+                <a href="/login.html" class="auth-link">Fazer login</a>
+            </p>
+            <p style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                Ao criar uma conta, você concorda com nossos
+                <a href="/termos.html" class="auth-link">Termos de Uso</a> e
+                <a href="/privacidade.html" class="auth-link">Política de Privacidade</a>.
+            </p>
+        </div>
     </div>
 </div>
 
+<script src="/cadastro.js"></script>
 </body>
 </html>

@@ -3,16 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sentiment • Landing</title>
+    <meta name="description" content="Plataforma de avaliações transparentes de empresas - Descubra a realidade antes de se candidatar." />
+    <title>Sentiment • Avaliações Transparentes de Empresas</title>
     <link rel="stylesheet" href="/landing.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body>
 
-<header class="topbar">
+<header class="topbar" role="banner">
     <div class="wrap topbar__inner">
-        <a class="brand" href="/">Sentiment</a>
+        <a class="brand" href="/" aria-label="Sentiment - Página inicial">Sentiment</a>
 
-        <nav class="nav">
+        <nav class="nav" aria-label="Navegação principal">
             <a class="nav__link" href="/comentarios.html">Escreva uma avaliação</a>
             <a class="nav__link" href="/login.html">Acessar</a>
         </nav>
@@ -20,7 +22,7 @@
 </header>
 
 <main>
-    <section class="hero">
+    <section class="hero" aria-label="Introdução">
         <div class="wrap hero__inner">
             <h1 class="hero__title">Procurando emprego?</h1>
             <p class="hero__subtitle">
@@ -28,38 +30,56 @@
                 <strong>ou conte a sua experiência.</strong>
             </p>
 
-            <div class="loginCard">
+            <div class="loginCard" role="region" aria-label="Chamada para ação">
                 <h2 class="loginCard__title">Mais transparência hoje, melhores escolhas amanhã</h2>
 
                 <div class="loginCard__row">
                     <p class="loginCard__text">
-                        Colabore conosco e ajude a fazer a diferença.
+                        Colabore conosco e ajude a fazer a diferença. Avaliações reais de quem já trabalhou lá.
                     </p>
 
-                    <a class="btn" href="/login.html">Faça Login</a>
+                    <a class="btn" href="/login.html" role="button">Faça Login</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="preview" aria-label="Avaliações">
+    <section class="preview" aria-label="Últimas avaliações">
         <div class="wrap">
+            <h2 class="section-title">Avaliações Recentes</h2>
+
             <div class="preview__panel">
+                <div id="reviews" class="reviews" role="list" aria-label="Lista de avaliações">
+                    <!-- Aqui o JavaScript vai inserir os cards -->
+                </div>
 
-                <!-- aqui o JS vai inserir os cards -->
-                <div id="reviews" class="reviews"></div>
+                <!-- Loading state -->
+                <div id="reviewsStatus" class="status loading" role="status" aria-live="polite">
+                    <div class="spinner" aria-hidden="true"></div>
+                    <span>Carregando avaliações...</span>
+                </div>
 
-                <!-- fallback caso não carregue -->
-                <p id="reviewsStatus" class="status">Carregando avaliações…</p>
+                <!-- Error state (inicialmente escondido) -->
+                <div id="reviewsError" class="status error" style="display: none;" role="alert">
+                    <p>Não foi possível carregar as avaliações. <button onclick="carregarAvaliacoes()">Tentar novamente</button></p>
+                </div>
+            </div>
 
+            <div class="cta-bottom">
+                <a href="/comentarios.html" class="btn btn-secondary">Compartilhe sua experiência</a>
             </div>
         </div>
     </section>
 </main>
 
-<footer class="footer">
+<footer class="footer" role="contentinfo">
     <div class="wrap footer__inner">
-        Rodapé: aqui faça um rodapé profissional
+        <p>&copy; 2024 Sentiment. Plataforma de avaliações transparentes.</p>
+        <p>
+            <a href="/sobre.html" style="color: #fff; opacity: 0.8;">Sobre</a> •
+            <a href="/privacidade.html" style="color: #fff; opacity: 0.8;">Privacidade</a> •
+            <a href="/termos.html" style="color: #fff; opacity: 0.8;">Termos</a>
+        </p>
     </div>
 </footer>
 
