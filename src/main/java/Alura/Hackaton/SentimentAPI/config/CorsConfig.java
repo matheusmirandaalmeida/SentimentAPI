@@ -8,7 +8,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
-@Configuration  // ← ADICIONAR ESTA ANOTAÇÃO
+@Configuration
 public class CorsConfig {
 
     @Bean

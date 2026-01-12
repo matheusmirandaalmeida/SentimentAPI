@@ -54,16 +54,16 @@
 
             <div class="preview__panel">
                 <div id="reviews" class="reviews" role="list" aria-label="Lista de avaliações">
-                    <!-- cards -->
+                    <!-- cards serão inseridos aqui pelo Js -->
                 </div>
 
-                <!-- Loading state - efeito de carrecamento -->
+                <!-- Loading-->
                 <div id="reviewsStatus" class="status loading" role="status" aria-live="polite">
                     <div class="spinner" aria-hidden="true"></div>
                     <span>Carregando avaliações...</span>
                 </div>
 
-                <!-- Error state, fica escondido no inicio -->
+                <!-- Error -->
                 <div id="reviewsError" class="status error" style="display: none;" role="alert">
                     <p>Não foi possível carregar as avaliações. <button onclick="carregarAvaliacoes()">Tentar novamente</button></p>
                 </div>

@@ -3,21 +3,58 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Avaliações</title>
+  <title>Avaliações - Sentiment</title>
   <link rel="stylesheet" href="/avaliacoes.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body>
-<main class="page">
-  <section class="feed" aria-label="Lista de avaliações">
-    <p
-            id="emptyState"
-            style="display:none;color:#6b7280;text-align:center;margin:16px 0;">
-      Ainda não há avaliações. Seja o primeiro a avaliar!
-    </p>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/landing.html">Sentiment</a>
+    <nav class="nav">
+      <a href="/comentarios.html">Escreva uma avaliação</a>
+      <a href="/login.html">Acessar</a>
+    </nav>
+  </div>
+</header>
 
-    <div id="listaAvaliacoes" class="list"></div>
+<main class="page">
+  <div class="page-header">
+    <h1>Avaliações Recentes</h1>
+    <p>Experiências compartilhadas por profissionais</p>
+  </div>
+
+  <section class="feed">
+    <!-- Filtro -->
+    <div class="simple-filter">
+      <button class="filter-btn active" data-filter="all">Todas</button>
+      <button class="filter-btn" data-filter="positive">Positivas</button>
+      <button class="filter-btn" data-filter="negative">Negativas</button>
+      <button class="filter-btn" data-filter="neutral">Neutras</button>
+    </div>
+
+    <!-- Lista de avaliações -->
+    <div id="listaAvaliacoes" class="list">
+      <!-- Avaliações serão carregadas aqui pelo JavaScript -->
+    </div>
+
+    <!-- Estado vazio (inicialmente escondido) -->
+    <div id="emptyState" style="display: none; text-align: center; padding: 3rem; color: #666;">
+      <p>Nenhuma avaliação encontrada.</p>
+    </div>
+
+    <!-- Botão para carregar mais -->
+    <div class="load-more">
+      <button id="loadMoreBtn" class="btn">Carregar mais avaliações</button>
+    </div>
   </section>
 </main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>&copy; 2026 Sentiment. Plataforma de avaliações transparentes.</p>
+  </div>
+</footer>
 
 <script src="/avaliacoes.js"></script>
 </body>
