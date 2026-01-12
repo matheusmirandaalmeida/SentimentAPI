@@ -1,0 +1,21 @@
+[ {
+  "id" : "ff11e17f-f8a8-415c-8a01-d27e01a68ee5",
+  "empresa" : "Teste",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Analista",
+  "titulo" : "Salario",
+  "texto" : "O salário é muito bom",
+  "sentimento" : "NEUTRO",
+  "createdAt" : "2026-01-12T18:45:39.152348Z"
+}, {
+  "id" : "5c003652-4484-48b9-83e8-d13762a15339",
+  "empresa" : "Teste02",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Auxiliar",
+  "titulo" : "Salario",
+  "texto" : "O salário é péssimo",
+  "sentimento" : "NEGATIVO",
+  "createdAt" : "2026-01-12T19:10:49.222068Z"
+} ]

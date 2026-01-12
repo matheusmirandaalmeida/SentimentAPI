@@ -1,0 +1,11 @@
+[ {
+  "id" : 1,
+  "email" : "admin@Sentiment.com",
+  "senha" : "$2a$10$I671mBCf9WyBrdEjYzPkHu0a/vbR5VNVmhRTC9kXlL0A90BJQrVSq",
+  "role" : "ADMIN"
+}, {
+  "id" : 33,
+  "email" : "teste@gmail.com",
+  "senha" : "$2a$10$KeWL3Pz.B7QVrU8yi9JuBedv7KmCsbkPR3ciNSjV0hLZ0I3sm360O",
+  "role" : "USER"
+} ]
