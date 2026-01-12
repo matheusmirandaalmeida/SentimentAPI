@@ -108,4 +108,15 @@
   "sentimento" : "NEGATIVO",
   "createdAt" : "2026-01-12T22:47:41.528991Z",
   "usuario" : null
+}, {
+  "id" : "dc7ea186-6fa6-4d4a-86f6-4a03c0ec9d86",
+  "empresa" : "Governo",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Analista",
+  "titulo" : "Salario",
+  "texto" : "Mesmo que o salário seja baixo, a comida é ótimo e adoro como eles tratam os novos fúncionarios.",
+  "sentimento" : "POSITIVO",
+  "createdAt" : "2026-01-12T22:55:20.545102Z",
+  "usuario" : null
 } ]
