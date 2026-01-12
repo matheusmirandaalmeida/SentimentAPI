@@ -18,4 +18,14 @@
   "texto" : "O salário é péssimo",
   "sentimento" : "NEGATIVO",
   "createdAt" : "2026-01-12T19:10:49.222068Z"
+}, {
+  "id" : "d72ed07c-4fa2-45ad-ad73-bd864d656064",
+  "empresa" : "Teste04",
+  "vinculo" : "EX",
+  "situacao" : "Estágio",
+  "cargo" : "Analista",
+  "titulo" : "testando positivo",
+  "texto" : "A empresa é ótima",
+  "sentimento" : "NEUTRO",
+  "createdAt" : "2026-01-12T19:47:19.723479Z"
 } ]

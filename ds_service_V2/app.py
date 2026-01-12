@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi import HTTPException
 from pydantic import BaseModel
 import numpy as np
 import torch
@@ -32,8 +33,11 @@ bert_model.eval()
 # -----------------------------------------------------------------------------
 # Carregamento do modelo treinado (sklearn)
 # -----------------------------------------------------------------------------
-with open(MODEL_PATH, "rb") as f:
-    model = pickle.load(f)
+try:
+    with open(MODEL_PATH, "rb") as f:
+        model = pickle.load(f)
+except Exception as e:
+    raise RuntimeError(f"Falha ao carregar modelo: {e}")
 
 
 # -----------------------------------------------------------------------------
@@ -141,21 +145,38 @@ def health():
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
-    # Tradução
-    translated = translate_commentary(req.text)
 
-    # Embedding
-    X_emb = embedding_text([translated])
+    try:
+        if not req.text or not req.text.strip():
+            raise HTTPException(
+                status_code=422,
+                detail="Campo 'text' não pode ser vazio"
+            )
 
-    # Previsão base (0 ou 1)
-    forecast = int(model.predict(X_emb)[0])
+        # Tradução
+        translated = translate_commentary(req.text)
 
-    # Decisão final (inclui neutro)
-    label, score, label_id = neutral_definition(forecast, model, X_emb)
+        # Embedding
+        X_emb = embedding_text([translated])
 
-    return {
-        "label": label,
-        "score": float(score),
-        "label_id": int(label_id),
-        "translated": translated
-    }
+        # Previsão base (0 ou 1)
+        forecast = int(model.predict(X_emb)[0])
+
+        # Decisão final (inclui neutro)
+        label, score, label_id = neutral_definition(forecast, model, X_emb)
+
+        return {
+            "label": label,
+            "score": float(score),
+            "label_id": int(label_id),
+            "translated": translated
+        }
+    except HTTPException:
+        raise  # mantém erros HTTP corretos
+
+    except Exception as e:
+        # erro REAL do DS
+        raise HTTPException(
+            status_code=503,
+            detail=f"Erro no serviço de inferência: {str(e)}"
+        )

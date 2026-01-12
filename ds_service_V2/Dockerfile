@@ -11,7 +11,7 @@ RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
-COPY Model_Docker .
+COPY . .
 
 EXPOSE 8000
 

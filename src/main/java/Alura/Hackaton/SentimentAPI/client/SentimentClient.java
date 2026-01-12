@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -50,15 +51,23 @@ public class SentimentClient {
             log.debug("Label: {}, Score: {}", response.getLabel(), response.getScore());
             return response;
 
-        } catch (Exception e) {
-            log.error("Erro ao chamar FastAPI: {}", e.getMessage());
+        } catch (HttpStatusCodeException e) {
+            log.error("Erro HTTP do DS: {}", e.getResponseBodyAsString());
+
+            throw new ExternalServiceException(
+                    "DS retornou erro " + e.getStatusCode(),
+                    e
+            );
+        }
+        catch (Exception e) {
+            log.error("Erro ao chamar FastAPI", e);
 
             // Debug adicional
             log.error("URL tentada: {}", url);
             log.error("Request body: {{'text':'{}'}}", text);
 
             throw new ExternalServiceException(
-                    "Falha ao chamar serviço de análise: " + e.getMessage(),
+                    "Falha de comunicação com o serviço de análise",
                     e
             );
         }
