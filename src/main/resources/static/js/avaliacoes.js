@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-    const API_BASE_URL = 'http://localhost:8080'; // Spring Boot
+    const API_BASE_URL = 'http://localhost:8080';
     let todasAvaliacoes = [];
     let currentFilter = 'all';
     let visibleCount = 5;

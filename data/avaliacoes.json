@@ -7,7 +7,8 @@
   "titulo" : "Salario",
   "texto" : "O salário é muito bom",
   "sentimento" : "NEUTRO",
-  "createdAt" : "2026-01-12T18:45:39.152348Z"
+  "createdAt" : "2026-01-12T18:45:39.152348Z",
+  "usuario" : null
 }, {
   "id" : "5c003652-4484-48b9-83e8-d13762a15339",
   "empresa" : "Teste02",
@@ -17,7 +18,8 @@
   "titulo" : "Salario",
   "texto" : "O salário é péssimo",
   "sentimento" : "NEGATIVO",
-  "createdAt" : "2026-01-12T19:10:49.222068Z"
+  "createdAt" : "2026-01-12T19:10:49.222068Z",
+  "usuario" : null
 }, {
   "id" : "d72ed07c-4fa2-45ad-ad73-bd864d656064",
   "empresa" : "Teste04",
@@ -27,5 +29,39 @@
   "titulo" : "testando positivo",
   "texto" : "A empresa é ótima",
   "sentimento" : "NEUTRO",
-  "createdAt" : "2026-01-12T19:47:19.723479Z"
+  "createdAt" : "2026-01-12T19:47:19.723479Z",
+  "usuario" : null
+}, {
+  "id" : "50d361f4-102f-4cdc-827d-ddfdfd54415f",
+  "empresa" : "Bianca",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Gerente",
+  "titulo" : "Benefícios e coloboração",
+  "texto" : "A empresa é uma boa empresa",
+  "sentimento" : "NEUTRO",
+  "createdAt" : "2026-01-12T21:23:53.432130Z",
+  "usuario" : null
+}, {
+  "id" : "cd486730-3af0-41eb-9f85-f5d082356916",
+  "empresa" : "TestePositivo",
+  "vinculo" : "ATUAL",
+  "situacao" : "PJ",
+  "cargo" : "Gerente",
+  "titulo" : "Salario",
+  "texto" : "O salario é otimo",
+  "sentimento" : "NEUTRO",
+  "createdAt" : "2026-01-12T21:25:07.584128Z",
+  "usuario" : null
+}, {
+  "id" : "f147e58f-a934-421a-8763-b044b4453729",
+  "empresa" : "TestePositivo02",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Analista",
+  "titulo" : "Salario",
+  "texto" : "Excelente serviço, recomendo!",
+  "sentimento" : "POSITIVO",
+  "createdAt" : "2026-01-12T21:26:03.490486Z",
+  "usuario" : null
 } ]

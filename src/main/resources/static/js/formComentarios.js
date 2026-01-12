@@ -11,7 +11,7 @@ formComentarios?.addEventListener("submit", async (e) => {
   const situacao = document.querySelector("#situacao").value;
   const cargo = document.querySelector("#cargo").value.trim();
   const titulo = document.querySelector("#titulo").value.trim();
-  const texto = document.querySelector("#avaliacao").value.trim();
+  const texto = document.querySelector("#texto").value.trim();
   const termos = document.querySelector('input[name="termos"]').checked;
 
   if (!empresa || !vinculo || !situacao || !titulo || !texto || !termos) {

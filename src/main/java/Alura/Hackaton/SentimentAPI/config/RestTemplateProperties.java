@@ -7,9 +7,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "rest.template")
 public class RestTemplateProperties {
     private int connectTimeout = 5000;
-    private int readTimeout = 10000;
+    private int readTimeout = 30000;
 
-    // Getters e Setters
     public int getConnectTimeout() { return connectTimeout; }
     public void setConnectTimeout(int connectTimeout) { this.connectTimeout = connectTimeout; }
 

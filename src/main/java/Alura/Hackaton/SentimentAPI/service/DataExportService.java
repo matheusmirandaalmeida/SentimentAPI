@@ -33,12 +33,13 @@ public class DataExportService {
     private final UsuarioRepository usuarioRepository;
     private AvaliacaoRepository avaliacaoRepository;
     private final ObjectMapper objectMapper;
-    public DataExportService(UsuarioRepository usuarioRepository,  AvaliacaoRepository avaliacaoRepository, ObjectMapper objectMapper) {
+
+    public DataExportService(UsuarioRepository usuarioRepository,
+                             AvaliacaoRepository avaliacaoRepository,
+                             ObjectMapper objectMapper) {
         this.usuarioRepository = usuarioRepository;
-
         this.avaliacaoRepository = avaliacaoRepository;
-
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

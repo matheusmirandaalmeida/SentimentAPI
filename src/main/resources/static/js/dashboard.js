@@ -76,7 +76,7 @@ async function loadDashboardData() {
 }
 
 function updateMetrics(data) {
-    console.log('Atualizando métricas:', data);
+    console.log('Atualizando métricas com dados reais:', data);
 
     // Atualizar porcentagens
     document.getElementById('porcentagem-positivo').textContent = `${data.positivo}%`;
@@ -87,6 +87,11 @@ function updateMetrics(data) {
     document.querySelector('.progresso-positivo').style.width = `${data.positivo}%`;
     document.querySelector('.progresso-neutro').style.width = `${data.neutro}%`;
     document.querySelector('.progresso-negativo').style.width = `${data.negativo}%`;
+
+    // Atualizar totais
+    if (document.getElementById('total-avaliacoes')) {
+        document.getElementById('total-avaliacoes').textContent = data.total || 0;
+    }
 }
 
 function createChart(data) {
