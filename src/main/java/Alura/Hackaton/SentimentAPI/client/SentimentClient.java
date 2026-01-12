@@ -58,8 +58,7 @@ public class SentimentClient {
                     "DS retornou erro " + e.getStatusCode(),
                     e
             );
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Erro ao chamar FastAPI", e);
 
             // Debug adicional

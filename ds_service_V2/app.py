@@ -133,21 +133,15 @@ def predict(req: PredictRequest):
         # Tradução
         translated = translate_commentary(req.text)
 
-    # Embedding
-    X_emb = embedding_text([translated])
+        # Embedding
+        X_emb = embedding_text([translated])
 
-    # Previsão base (0 ou 1)
-    forecast = int(model.predict(X_emb)[0])
+        # Previsão base (0 ou 1)
+        forecast = int(model.predict(X_emb)[0])
 
-    # Decisão final (inclui neutro)
-    label, score, label_id = neutral_definition(forecast, model, X_emb)
+        # Decisão final (inclui neutro)
+        label, score, label_id = neutral_definition(forecast, model, X_emb)
 
-    return {
-        "label": label,
-        "score": float(score),
-        "label_id": int(label_id),
-        "translated": translated
-    }
         return {
             "label": label,
             "score": float(score),
