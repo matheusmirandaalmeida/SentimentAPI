@@ -8,7 +8,7 @@ async function carregarAvaliacoes() {
         errorDiv.style.display = "none";
         container.innerHTML = "";
 
-        const resp = await fetch("http://localhost:8080/api/avaliacoes?limit=3");
+        const resp = await fetch('/api/avaliacoes?limit=3');
 
         if (!resp.ok) {
             throw new Error(`HTTP ${resp.status}`);

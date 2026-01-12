@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const senhaError = document.getElementById('senhaError');
     const confirmarError = document.getElementById('confirmarError');
     
-    // URL da API Spring (ajuste conforme necessário)
-    const API_BASE_URL = 'http://localhost:8080';
+    // URL da API Spring
+    const API_BASE_URL = '';
     
     // Validação em tempo real
     emailInput.addEventListener('input', validateEmail);

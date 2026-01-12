@@ -49,14 +49,13 @@ public class AvaliacaoService {
         List<Avaliacao> lista;
 
         if (empresa != null && !empresa.isBlank()) {
-            //Filtra por empresa
-            lista = repo.findByEmpresaIgnoreCaseOrderByCreatedAtDesc(empresa);
+            lista = repo.searchByEmpresa(empresa);
         } else {
-            //ordenadas por data
+            // ordenadas por data
             lista = repo.findAllByOrderByCreatedAtDesc();
         }
 
-        // Aplica limite
+        // Aplica limite na pagina do landing
         if (limit > 0) {
             //Aqui o limite é 3 - config no repository
             if (empresa == null || empresa.isBlank()) {

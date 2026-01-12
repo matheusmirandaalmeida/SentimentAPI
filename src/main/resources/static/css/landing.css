@@ -217,10 +217,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    border: 1px solid black;
+    /*border: 1px solid black;*/
 }
 
-/* Individual Review Card - ESTILO IGUAL À IMAGEM */
+/* Individual Review Card */
 .review {
     background: white;
     border-bottom: 1px solid #eaeaea;
