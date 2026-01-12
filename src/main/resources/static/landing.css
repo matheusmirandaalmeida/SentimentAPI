@@ -53,14 +53,15 @@ body{
 .nav__link{
     color: #fff;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 16px;
     opacity: .9;
 }
 .nav__link:hover{ opacity: 1; text-decoration: underline; }
 
 .hero{
-    padding: 90px 0 40px;
-    background: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%); //Degrader
+    padding: 110px 0 40px;
+    background: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%); 
+    /* Degrader */
 }
 .hero__inner{
     text-align: center;

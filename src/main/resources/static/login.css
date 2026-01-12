@@ -1,84 +1,300 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    --bg: #ffffff;
+    --muted: #e8ecf6;
+    --text: #0f172a;
+    --sub: rgba(15, 23, 42, .78);
+    --shadow: 0 18px 55px rgba(0, 0, 0, .12);
+    --shadow2: 0 10px 30px rgba(0, 0, 0, .08);
+    --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%);
+    --btn-color: #f1ec9d;
+    --btn-hover: #e8e38c;
+    --link-color: #111827;
+}
+
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', Arial, sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #E8E7F7, #99AFF5);
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: var(--text);
+    background: var(--primary-gradient);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+.container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.container {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
+    padding: 20px;
 }
 
 .card {
-    background: #fff;
-    width: 320px;
-    padding: 35px;
+    background: var(--bg);
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 36px;
     border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card h2 {
     text-align: center;
-    color: #4A80F5;
-    margin-bottom: 25px;
+    color: var(--text);
+    margin-bottom: 28px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .card form {
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
 .card input {
-    padding: 12px;
-    margin-bottom: 15px;
+    width: 100%;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid #d1d5db;
     border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 15px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+    background: #f9fafb;
+    color: var(--text);
+}
+
+.card input::placeholder {
+    color: #9ca3af;
+    opacity: 0.8;
 }
 
 .card input:focus {
     outline: none;
-    border-color: #4A80F5;
+    border-color: #769798;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(118, 151, 152, 0.2);
+}
+
+.card input.error {
+    border-color: #ef4444;
+    background: #fef2f2;
 }
 
 .card button {
-    background: #4A80F5;
-    color: #fff;
+    background: var(--btn-color);
+    color: #000;
+    border: 1px solid rgba(0, 0, 0, .08);
     border: none;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 46px;
 }
 
 .card button:hover {
-    background: #3b6fe0;
+    background: var(--btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
 }
 
+.card button:active {
+    transform: translateY(0);
+}
+
+.card button:disabled {
+    background: #d1d5db;
+    color: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Mensagens de erro */
+.error-message {
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 4px;
+    display: none;
+    font-weight: 500;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.message {
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    display: none;
+    border: 1px solid transparent;
+}
+
+.message.success {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #a7f3d0;
+    display: block;
+}
+
+.message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fecaca;
+    display: block;
+}
+
+/* Links */
 .switch {
-    margin-top: 15px;
+    margin-top: 24px;
     text-align: center;
     font-size: 14px;
+    color: var(--sub);
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
 }
 
 .switch a {
-    color: #4A80F5;
+    color: var(--link-color);
     text-decoration: none;
     font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
 }
 
 .switch a:hover {
+    border-bottom: 1px solid var(--link-color);
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: 4px;
+    margin-bottom: -8px;
+}
+
+.forgot-password a {
+    font-size: 12px;
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-password a:hover {
+    color: var(--text);
     text-decoration: underline;
+}
+
+.back-home {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.back-home a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sub);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.back-home a:hover {
+    color: var(--text);
+}
+
+/* Spinner */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 0, 0, .2);
+    border-radius: 50%;
+    border-top-color: #000;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#btnSpinner {
+    display: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+
+    .card {
+        padding: 32px 24px;
+        max-width: 100%;
+        border-radius: 10px;
+    }
+
+    .card h2 {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .card form {
+        gap: 18px;
+    }
+
+    .card input {
+        height: 44px;
+    }
+
+    .card button {
+        height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 28px 20px;
+    }
+
+    .card h2 {
+        font-size: 22px;
+    }
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.auth-logo a {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: -0.5px;
 }

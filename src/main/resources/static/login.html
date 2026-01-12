@@ -2,29 +2,57 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Sentiment • Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/login.css">
+    <meta name="description" content="Faça login no Sentiment para acessar sua conta.">
+    <link rel="stylesheet" href="login.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body>
 
 <div class="container">
     <div class="card">
+        <div class="auth-logo">
+            <a href="/">Sentiment</a>
+        </div>
+        
         <h2>Entrar</h2>
+        
+        <div id="message" class="message"></div>
 
         <form id="formLogin">
-            <input id="emailLogin" type="email" placeholder="E-mail" required>
-            <input id="senhaLogin" type="password" placeholder="Senha" required>
-            <button type="submit">Login</button>
+            <div>
+                <input id="emailLogin" type="email" placeholder="seu@email.com" required autocomplete="email">
+                <div id="emailError" class="error-message">Por favor, insira um e-mail válido</div>
+            </div>
+            
+            <div>
+                <input id="senhaLogin" type="password" placeholder="Sua senha" required autocomplete="current-password">
+                <div id="senhaError" class="error-message">Por favor, insira sua senha</div>
+    
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <span id="btnText">Entrar</span>
+                <div id="btnSpinner" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+            </button>
         </form>
 
         <p class="switch">
             Não tem conta?
             <a href="/cadastro.html">Cadastre-se</a>
         </p>
-        <script src="/login.js"></script>
+        
+        <div class="back-home">
+            <a href="/">
+                Voltar para a página inicial
+            </a>
+        </div>
     </div>
 </div>
 
+<script src="/login.js"></script>
 </body>
 </html>
