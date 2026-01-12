@@ -56,82 +56,102 @@ body{
     font-size: 12px;
     opacity: .9;
 }
-
 .nav__link:hover{ opacity: 1; text-decoration: underline; }
 
 .hero{
     padding: 90px 0 40px;
-    background: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%);
-
+    background: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%); //Degrader
 }
-
 .hero__inner{
     text-align: center;
 }
-
 .hero__title{
     margin: 0;
     font-size: clamp(36px, 4.4vw, 60px);
     font-weight: 800;
 }
-
 .hero__subtitle{
     margin: 10px 0 0;
     font-size: clamp(18px, 2.4vw, 34px);
     line-height: 1.15;
 }
-
 .hero__subtitle strong{
     display: inline-block;
     margin-top: 2px;
     font-weight: 900;
 }
 
-/* Card login*/
+/* Login Card */
 .loginCard{
     display: flex;
-    width: min(760px, 100%);
+   /* width: min(760px, 100%); */
     margin: 55px auto 0;
     background: #fff;
     border-radius: 10px;
     box-shadow: var(--shadow);
-    padding: 0px 0px;
+    overflow: hidden; /*bordas arredondadas */
     text-align: left;
-    align-items: center;
-    gap: 30px;
-    justify-content: flex-end;
+    align-items: stretch;
+    min-height: 300px;
+}
+
+/* Conteúdo do card */
+.loginCard__content {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .loginCard__title{
     margin: 0 0 16px;
     font-size: 18px;
     font-weight: 500;
-    text-align: center;
+    text-align: left;
 }
 
 .loginCard__row{
     display: flex;
-    gap: 18px;
-    flex-wrap: wrap;
     flex-direction: column;
-    align-items: flex-end;
+    gap: 18px;
+    align-items: flex-start;
 }
 
 .loginCard__text{
     margin: 0;
-    font-size: 12.5px;
+    font-size: 14px;
     color: var(--sub);
-    max-width: 320px;
-    line-height: 1.35;
+    line-height: 1.5;
+    max-width: 100%;
 }
 
+/* Container da imagem */
+.image-sharing {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    overflow: hidden;
+    border-left: 1px solid #e5e7eb;
+}
+
+.img_main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botão */
 .btn{
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 130px;
-    height: 34px;
-    padding: 0 16px;
+    height: 40px;
+    padding: 0 24px;
     border-radius: 8px;
     background: #f1ec9d;
     border: 1px solid rgba(0,0,0,.06);
@@ -140,13 +160,18 @@ body{
     font-size: 14px;
     text-decoration: none;
     box-shadow: 0 6px 18px rgba(0,0,0,.10);
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-.image-sharing {
-  height: 300px;
-  width: 340px;
-  background: black;
-  border-radius: 8px;
+.btn:hover{
+    background: #e8e38c;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.btn:active{
+    transform: translateY(0);
 }
 
 /* Seção azul + painel central */
@@ -161,6 +186,7 @@ body{
     padding: 0;
 }
 
+/* Reviews */
 .reviews{
     background: #fff;
     border-radius: 10px;
@@ -214,9 +240,9 @@ body{
 }
 
 .cta-bottom {
-      display: flex;
-    /* margin: auto; */
+    display: flex;
     justify-content: center;
+    margin-top: 30px;
 }
 
 .footer{
@@ -230,13 +256,43 @@ body{
     opacity: .9;
 }
 
+/* Respons */
+@media (max-width: 768px) {
+    .loginCard {
+        flex-direction: column; /* Empilha conteúdo e imagem */
+        min-height: auto;
+    }
+
+    .image-sharing {
+        order: -1; /* Coloca a imagem primeiro no mobile */
+        border-left: none;
+        border-bottom: 1px solid #e5e7eb;
+        height: 200px; /* Altura fixa para mobile */
+    }
+
+    .loginCard__content {
+        padding: 24px;
+    }
+
+    .img_main {
+        height: 100%;
+        width: 100%;
+    }
+}
+
 @media (max-width: 620px){
-    .wrap{ width: min(980px, calc(100% - 28px)); }
-    .nav{ gap: 14px; }
-    .loginCard{ padding: 18px; }
-    .loginCard__row{ flex-direction: column; align-items: flex-start; }
-    .btn{ align-self: center; }
-    .reviews{ padding: 18px; }
+    .wrap{
+        width: min(980px, calc(100% - 28px));
+    }
+    .nav{
+        gap: 14px;
+    }
+    .btn{
+        align-self: center;
+    }
+    .reviews{
+        padding: 18px;
+    }
 }
 
 /* Badges de sentimento */
@@ -287,7 +343,6 @@ body{
 }
 
 /* Loading spinner */
-
 .spinner {
     display: inline-block;
     width: 20px;
