@@ -47,14 +47,18 @@ public class SentimentServiceImpl implements SentimentService {
                 throw new ExternalServiceException("Resposta inválida do serviço de DataScience");
             }
 
-            // CORREÇÃO AQUI: Use getScore() em vez de getProbabilidade()
             String previsao = dsResponse.getPrevisao();
             double probabilidade = dsResponse.getScore() != null ? dsResponse.getScore() : 0.0;
 
             log.info("Análise concluída: {} com {:.2f}% de confiança",
                     previsao, probabilidade * 100);
 
-            SentimentResponseDTO response = new SentimentResponseDTO(previsao, probabilidade);
+            SentimentResponseDTO response = new SentimentResponseDTO(
+                    previsao,
+                    probabilidade,
+                    dsResponse.getLabelId(),
+                    dsResponse.getTranslated()
+            );
 
             // Log no banco
             LogSentimentData data = new LogSentimentData(

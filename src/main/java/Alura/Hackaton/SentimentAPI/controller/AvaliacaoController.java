@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/avaliacoes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AvaliacaoController {
 
     private final AvaliacaoService service;

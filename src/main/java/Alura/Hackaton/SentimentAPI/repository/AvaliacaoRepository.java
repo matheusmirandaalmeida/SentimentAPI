@@ -10,13 +10,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, String> {
-    List<Avaliacao> findByEmpresaIgnoreCaseOrderByCreatedAtDesc(String empresa);
+//    List<Avaliacao> findByEmpresaIgnoreCaseOrderByCreatedAtDesc(String empresa);
     List<Avaliacao> findAllByOrderByCreatedAtDesc();
     List<Avaliacao> findTop3ByOrderByCreatedAtDesc();
 
-    // consulta com paginação - funcao em desenvol
-    @Query("SELECT a FROM Avaliacao a WHERE (:empresa IS NULL OR LOWER(a.empresa) LIKE LOWER(CONCAT('%', :empresa, '%'))) ORDER BY a.createdAt DESC")
-    List<Avaliacao> searchByEmpresa(@Param("empresa") String empresa);
+    // consulta com paginação - funcao em desenvol - agora trata de string vazia
+    @Query("""
+    SELECT a FROM Avaliacao a 
+    WHERE (:empresa IS NULL OR :empresa = '' OR LOWER(a.empresa) LIKE LOWER(CONCAT('%', :empresa, '%'))) 
+    ORDER BY a.createdAt DESC
+    """)    List<Avaliacao> searchByEmpresa(@Param("empresa") String empresa);
 
     // Para dashboard
     long countBySentimento(Sentimento sentimento);

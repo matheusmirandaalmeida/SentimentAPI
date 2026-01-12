@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-    const API_BASE_URL = 'http://localhost:8080';
+    const API_BASE_URL = window.AppConfig?.getApiBaseUrl() || '';
     let todasAvaliacoes = [];
     let currentFilter = 'all';
     let visibleCount = 5;
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
 
-            const response = await fetch(`${API_BASE_URL}/api/avaliacoes`);
+            const response = await fetch('/api/avaliacoes');
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);

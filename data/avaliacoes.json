@@ -64,4 +64,37 @@
   "sentimento" : "POSITIVO",
   "createdAt" : "2026-01-12T21:26:03.490486Z",
   "usuario" : null
+}, {
+  "id" : "f3547285-0d38-4122-931a-554f08d62c79",
+  "empresa" : "TesteNegativo",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "encarregado",
+  "titulo" : "geral",
+  "texto" : "A empresa é ruim",
+  "sentimento" : "NEGATIVO",
+  "createdAt" : "2026-01-12T21:52:56.936362Z",
+  "usuario" : null
+}, {
+  "id" : "745c4e45-a92b-478e-aaef-362f3faa0792",
+  "empresa" : "Testando Positivo",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Auxiliar",
+  "titulo" : "Salario",
+  "texto" : "O salario é otimo",
+  "sentimento" : "NEUTRO",
+  "createdAt" : "2026-01-12T22:03:11.751458Z",
+  "usuario" : null
+}, {
+  "id" : "d3d0bc39-0f2b-4c85-9ca4-ad3e5161a330",
+  "empresa" : "TesteAddLabel",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "Analista",
+  "titulo" : "Salario",
+  "texto" : "salário é bom",
+  "sentimento" : "NEUTRO",
+  "createdAt" : "2026-01-12T22:10:33.135687Z",
+  "usuario" : null
 } ]
