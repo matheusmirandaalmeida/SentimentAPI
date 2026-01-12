@@ -39,4 +39,7 @@ public class Avaliacao {
 
     @Column(nullable = false)
     private Instant createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuario;
 }

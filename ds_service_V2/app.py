@@ -8,10 +8,7 @@ from pathlib import Path
 from transformers import RobertaTokenizer, RobertaModel
 from deep_translator import GoogleTranslator
 
-
-# -----------------------------------------------------------------------------
 # Configuração da aplicação
-# -----------------------------------------------------------------------------
 app = FastAPI(title="DS Sentiment Service (Positive / Negative / Neutral)")
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -20,25 +17,16 @@ MODEL_PATH = BASE_DIR / "Tuning_Model.pkl"
 MODEL_NAME = "roberta-base"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
-# -----------------------------------------------------------------------------
 # Carregamento do tokenizer e modelo BERT (RoBERTa)
-# -----------------------------------------------------------------------------
 tokenizer = RobertaTokenizer.from_pretrained(MODEL_NAME)
 bert_model = RobertaModel.from_pretrained(MODEL_NAME).to(device)
 bert_model.eval()
 
-
-# -----------------------------------------------------------------------------
 # Carregamento do modelo treinado (sklearn)
-# -----------------------------------------------------------------------------
 with open(MODEL_PATH, "rb") as f:
     model = pickle.load(f)
 
-
-# -----------------------------------------------------------------------------
 # Contratos HTTP
-# -----------------------------------------------------------------------------
 class PredictRequest(BaseModel):
     # Mantém o campo "text" para compatibilidade com o backend Java
     text: str
@@ -50,10 +38,7 @@ class PredictResponse(BaseModel):
     label_id: int    # 1=Positive | 0=Negative | 2=Neutral
     translated: str  # texto efetivamente analisado
 
-
-# -----------------------------------------------------------------------------
 # Tradução automática (fallback seguro)
-# -----------------------------------------------------------------------------
 def translate_commentary(input_text: str) -> str:
     try:
         translator = GoogleTranslator(source="auto", target="en")
@@ -62,10 +47,7 @@ def translate_commentary(input_text: str) -> str:
         # Se a tradução falhar, segue com o texto original
         return input_text
 
-
-# -----------------------------------------------------------------------------
 # Geração de embeddings usando RoBERTa
-# -----------------------------------------------------------------------------
 def embedding_text(texts: list[str]) -> np.ndarray:
     all_embeddings = []
 
@@ -90,14 +72,11 @@ def embedding_text(texts: list[str]) -> np.ndarray:
 
     return np.vstack(all_embeddings)
 
-
-# -----------------------------------------------------------------------------
 # Regra de decisão com sentimento neutro
-# -----------------------------------------------------------------------------
 def neutral_definition(
-    forecast: int,
-    model,
-    X_emb: np.ndarray
+        forecast: int,
+        model,
+        X_emb: np.ndarray
 ) -> tuple[str, float, int]:
     """
     Retorna:
@@ -130,10 +109,7 @@ def neutral_definition(
 
     return "Negative", top1, 0
 
-
-# -----------------------------------------------------------------------------
 # Endpoints
-# -----------------------------------------------------------------------------
 @app.get("/health")
 def health():
     return {"status": "ok"}
