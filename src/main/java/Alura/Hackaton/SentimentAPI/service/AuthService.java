@@ -16,10 +16,13 @@ public class AuthService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder encoder;
+    private final DataExportService dataExportService;
 
-    public AuthService(UsuarioRepository repository, PasswordEncoder encoder) {
+    public AuthService(UsuarioRepository repository, PasswordEncoder encoder,
+                       DataExportService dataExportService) {
         this.repository = repository;
         this.encoder = encoder;
+        this.dataExportService = dataExportService;
     }
 
     public void register(RegisterRequest req) {
@@ -29,8 +32,16 @@ public class AuthService {
             throw new BusinessException("Email já cadastrado");
         }
 
-        Usuario usuario = new Usuario(req.getEmail(), encoder.encode(req.getSenha()));
+        // Usuários registrados normalmente são USER, não ADMIN
+        Usuario usuario = new Usuario(
+                req.getEmail(),
+                encoder.encode(req.getSenha()),
+                "USER"
+        );
         repository.save(usuario);
+
+        // Exporta dados atualizados para JSON
+        dataExportService.exportarDadosParaJson();
 
         log.info("Usuário registrado com sucesso: {}", req.getEmail());
     }
@@ -46,10 +57,12 @@ public class AuthService {
             throw new BusinessException("Email ou senha inválidos");
         }
 
-        //Atualiazção - agora Implementar JWT real
-        String token = "fake-jwt-token-" + usuario.getId() + "-" + System.currentTimeMillis();
+        // Gera token com role
+        String token = "fake-jwt-token-" + usuario.getId() + "-" +
+                usuario.getRole() + "-" + System.currentTimeMillis();
 
-        log.info("Login bem-sucedido para: {}", req.getEmail());
-        return new AuthResponse(token);
+        log.info("Login bem-sucedido para: {} (role: {})", req.getEmail(), usuario.getRole());
+
+        return new AuthResponse(token, usuario.getRole());
     }
 }

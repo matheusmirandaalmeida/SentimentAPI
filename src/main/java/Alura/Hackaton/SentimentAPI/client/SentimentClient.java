@@ -27,13 +27,13 @@ public class SentimentClient {
     public DsPredictResponseWrapper predict(String text) {
         String url = props.getBaseUrl() + props.getPredictPath();
 
-        log.info("📡 Chamando FastAPI: {}", url);
-        log.info("📝 Texto para análise: '{}'", text);
+        log.info("Chamando FastAPI: {}", url);
+        log.info("Texto para análise: '{}'", text);
 
         try {
             Map<String, String> requestBody = Map.of("text", text);
 
-            log.debug("📦 Enviando JSON: {}", requestBody);
+            log.debug("Enviando JSON: {}", requestBody);
 
             DsPredictResponseWrapper response = restTemplate.postForObject(
                     url,

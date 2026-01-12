@@ -20,12 +20,18 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-    // se backend devolver JSON com token
-    const data = await resp.json().catch(() => null);
+    const data = await resp.json();
 
     if (data?.token) {
         localStorage.setItem("token", data.token);
-        window.location.href = "/comentarios.html";
+        localStorage.setItem("userRole", data.role || "USER");
+
+        // Redireciona baseado no role
+        if (data.role === "ADMIN") {
+            window.location.href = "/dashboard.html"; // Página do admin
+        } else {
+            window.location.href = "/comentarios.html"; // Página do usuário comum
+        }
     } else {
         alert("Login ok, mas não recebi token.");
     }
