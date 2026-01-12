@@ -21,19 +21,5 @@ public class SentimentController {
 
         return ResponseEntity.ok(sentimentService.analyze(request));
     }
-
-//    @GetMapping("/dashboard")
-//    public SentimentDashboardResponse getDashboard() {
-//        return new SentimentDashboardResponse (
-//                65,
-//                25,
-//                10,
-//                List.of(
-//                        "Atendimento excelente",
-//                        "Entrega rápida",
-//                        "Produto muito bom"
-//                )
-//        );
-//    }
 }
 

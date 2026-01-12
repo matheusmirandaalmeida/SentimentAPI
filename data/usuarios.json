@@ -8,4 +8,9 @@
   "email" : "teste@gmail.com",
   "senha" : "$2a$10$KeWL3Pz.B7QVrU8yi9JuBedv7KmCsbkPR3ciNSjV0hLZ0I3sm360O",
   "role" : "USER"
+}, {
+  "id" : 65,
+  "email" : "machado@teste.com",
+  "senha" : "$2a$10$i8Qruunv05yuHBUWdEp2Su.f7jSn6sW5iGfin3Z07Rq2HQm/6ZXI2",
+  "role" : "USER"
 } ]

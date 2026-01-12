@@ -97,4 +97,15 @@
   "sentimento" : "NEUTRO",
   "createdAt" : "2026-01-12T22:10:33.135687Z",
   "usuario" : null
+}, {
+  "id" : "2f3423dc-9d32-4a06-841e-04afdac41e23",
+  "empresa" : "João",
+  "vinculo" : "ATUAL",
+  "situacao" : "CLT",
+  "cargo" : "CEO",
+  "titulo" : "Salário",
+  "texto" : "O escritório parece moderno entretanto a comunicação é ruim e a organização é pobre",
+  "sentimento" : "NEGATIVO",
+  "createdAt" : "2026-01-12T22:47:41.528991Z",
+  "usuario" : null
 } ]
