@@ -1,6 +1,8 @@
+@import url('colors.css');
+
 :root {
-  --back: #ffffff;
-  --back-secundario: #f8fafc;
+  --back: #f8fafc;
+  --back-secundario: #a1c2e4;
   --texto: #111827;
   --texto-secundario: #6b7280;
   --texto-suave: #9ca3af;
@@ -11,6 +13,8 @@
   --raio-grande: 12px;
   --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+   --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
 }
 
 * {
@@ -21,7 +25,7 @@
 
 body {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-  background: var(--back-secundario);
+  background: var(--primary-gradient);
   color: var(--texto);
   line-height: 1.5;
   min-height: 100vh;
@@ -223,7 +227,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: var(--back-secundario);
+  /* background: var(--back-secundario); */
   padding: 20px;
   border-radius: var(--raio);
   border: 1px solid var(--borda);

@@ -36,3 +36,7 @@ build/
 **/venv/
 **/__pycache__/
 .venv
+
+### DATABASE ###
+data/sentimentdb.mv.db
+

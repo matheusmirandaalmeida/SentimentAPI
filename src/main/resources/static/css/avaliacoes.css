@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('color.css');
 
 :root {
     --bg: #ffffff;
@@ -7,6 +8,8 @@
     --sub: rgba(15,23,42,.78);
     --shadow: 0 18px 55px rgba(0,0,0,.12);
     --shadow2: 0 10px 30px rgba(0,0,0,.08);
+
+    /* --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%); */
 }
 
 * {
@@ -16,10 +19,12 @@
 }
 
 body {
-    font-family: inter, Segoe UI, Roboto, Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     color: var(--text);
-    background: var(--bg);
+    background: var(--primary-gradient);
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Layout */
@@ -31,7 +36,7 @@ body {
 /* Topbar */
 .topbar {
     height: 70px;
-    background: #000;
+    background: var(--primary-gradient);
     color: #fff;
     display: flex;
     align-items: center;
@@ -62,7 +67,7 @@ body {
     text-decoration: none;
     font-size: 16px;
     opacity: .9;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
 }
 
 .nav a:hover {
@@ -73,7 +78,8 @@ body {
 /* Página principal */
 .page {
     padding: 40px 0 60px;
-    min-height: calc(100vh - 170px); /* Altura total menos topbar e footer */
+    min-height: calc(100vh - 170px);
+    background: var(--cor-fundo);
 }
 
 .page-header {
@@ -84,12 +90,14 @@ body {
 .page-header h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
-    color: var(--text);
+    color: var(--texto-primario);
+    font-weight: 700;
 }
 
 .page-header p {
-    color: var(--sub);
+    color: var(--texto-secundario);
     font-size: 1.1rem;
+    font-weight: 500;
 }
 
 /* Feed de avaliações */
@@ -110,24 +118,25 @@ body {
 
 .filter-btn {
     padding: 8px 20px;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--cor-fundo-cartao);
+    border: 1px solid var(--cor-borda);
     border-radius: 20px;
     font-size: 14px;
-    color: #4b5563;
+    color: var(--texto-secundario);
     cursor: pointer;
     transition: all 0.2s ease;
+    font-weight: 500;
 }
 
 .filter-btn:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+    background: var(--cor-fundo);
+    border-color: var(--texto-suave);
 }
 
 .filter-btn.active {
-    background: #000;
+    background: var(--cor-primaria);
     color: white;
-    border-color: #000;
+    border-color: var(--cor-primaria);
 }
 
 /* Lista de avaliações */
@@ -140,9 +149,9 @@ body {
 
 /* Cartão de avaliação */
 .review-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    background: var(--cor-fundo-cartao);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
     padding: 24px;
     box-shadow: var(--shadow2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -151,18 +160,19 @@ body {
 .review-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    border-color: var(--cor-primaria-clara);
 }
 
 .review-card.positive {
-    border-left: 4px solid #10b981;
+    border-left: 4px solid var(--cor-positiva);
 }
 
 .review-card.negative {
-    border-left: 4px solid #ef4444;
+    border-left: 4px solid var(--cor-negativa);
 }
 
 .review-card.neutral {
-    border-left: 4px solid #f59e0b;
+    border-left: 4px solid var(--cor-neutra);
 }
 
 /* Cabeçalho da avaliação */
@@ -185,12 +195,12 @@ body {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #2563eb;
+    background: linear-gradient(135deg, var(--cor-primaria-clara), var(--cor-primaria-escura));
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 18px;
     flex-shrink: 0;
 }
@@ -198,28 +208,29 @@ body {
 .reviewer-name {
     font-weight: 600;
     font-size: 1.2rem;
-    color: #1f2937;
+    color: var(--texto-primario);
     margin: 0;
     line-height: 1.3;
 }
 
 .reviewer-role {
-    color: #666;
+    color: var(--texto-secundario);
     font-size: 0.95rem;
     margin-top: 2px;
 }
 
 .company {
-    background: #f1f5f9;
+    background: var(--cor-fundo);
     padding: 6px 12px;
     border-radius: 12px;
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--texto-secundario);
     font-weight: 500;
+    border: 1px solid var(--cor-borda);
 }
 
 .review-date {
-    color: #94a3b8;
+    color: var(--texto-suave);
     font-size: 0.9rem;
     margin-bottom: 12px;
     display: block;
@@ -228,7 +239,7 @@ body {
 .review-title {
     font-size: 1.3rem;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--texto-primario);
     margin-bottom: 12px;
     line-height: 1.4;
 }
@@ -236,7 +247,7 @@ body {
 .review-text {
     margin: 0 0 20px 0;
     font-size: 1rem;
-    color: #374151;
+    color: var(--texto-primario);
     line-height: 1.7;
 }
 
@@ -249,13 +260,19 @@ body {
 }
 
 .tag {
-    background: #f8fafc;
-    color: #475569;
+    background: var(--cor-fundo);
+    color: var(--texto-secundario);
     padding: 6px 12px;
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 500;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--cor-borda);
+}
+
+.tag:hover {
+    background: var(--cor-primaria-clara);
+    color: var(--cor-primaria-escura);
+    border-color: var(--cor-primaria);
 }
 
 /* Footer da avaliação */
@@ -264,7 +281,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-top: 16px;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--cor-borda);
 }
 
 .sentiment-badge {
@@ -277,38 +294,40 @@ body {
 }
 
 .review-card.positive .sentiment-badge {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--cor-positiva-clara);
+    color: var(--cor-positiva);
 }
 
 .review-card.negative .sentiment-badge {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--cor-negativa-clara);
+    color: var(--cor-negativa);
 }
 
 .review-card.neutral .sentiment-badge {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--cor-neutra-clara);
+    color: var(--cor-neutra);
 }
 
 .review-id {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--texto-suave);
 }
 
 /* Estado vazio */
 #emptyState {
     text-align: center;
     padding: 60px 20px;
-    color: #6b7280;
-    background: #f9fafb;
+    color: var(--texto-suave);
+    background: var(--cor-fundo);
     border-radius: 10px;
     margin: 20px 0;
+    border: 2px dashed var(--cor-borda);
 }
 
 #emptyState p {
     font-size: 1.1rem;
     margin-bottom: 10px;
+    color: var(--texto-secundario);
 }
 
 /* Loading e error states */
@@ -328,8 +347,8 @@ body {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #2563eb;
+    border: 4px solid var(--cor-fundo);
+    border-top: 4px solid var(--cor-primaria);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -340,27 +359,28 @@ body {
 }
 
 .status.error {
-    background: #fee2e2;
-    border: 1px solid #fecaca;
-    border-radius: 8px;
+    background: var(--cor-negativa-clara);
+    border: 1px solid var(--cor-negativa);
+    border-radius: 12px;
     padding: 20px;
-    color: #991b1b;
+    color: var(--cor-negativa);
 }
 
 .status.error button {
-    background: #ef4444;
+    background: var(--cor-negativa);
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     margin-top: 10px;
     font-size: 14px;
     font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .status.error button:hover {
-    background: #dc2626;
+    background: var(--cor-primaria-escura);
 }
 
 /* Botão Carregar mais */
@@ -368,11 +388,11 @@ body {
     text-align: center;
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--cor-borda);
 }
 
 .load-more .btn {
-    background: #000;
+    background: var(--cor-primaria);
     color: white;
     border: none;
     padding: 12px 30px;
@@ -381,17 +401,20 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .load-more .btn:hover {
-    background: #333;
+    background: var(--cor-primaria-escura);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.25);
 }
 
 /* Footer */
 .footer {
-    background: #000;
+    background: #0f172a;
     color: white;
     padding: 30px 0;
     text-align: center;
@@ -407,38 +430,106 @@ body {
     color: rgba(255,255,255,0.8);
 }
 
+/* Botões de ação */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+    background: var(--cor-primaria);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--cor-primaria-escura);
+}
+
+.btn-secondary {
+    background: var(--cor-fundo);
+    color: var(--texto-primario);
+    border: 1px solid var(--cor-borda);
+}
+
+.btn-secondary:hover {
+    background: var(--cor-borda);
+}
+
+/* Utilitários de cor */
+.text-positive {
+    color: var(--cor-positiva);
+}
+
+.text-negative {
+    color: var(--cor-negativa);
+}
+
+.text-neutral {
+    color: var(--cor-neutra);
+}
+
+.text-primary {
+    color: var(--cor-primaria);
+}
+
+.bg-positive {
+    background: var(--cor-positiva-clara);
+}
+
+.bg-negative {
+    background: var(--cor-negativa-clara);
+}
+
+.bg-neutral {
+    background: var(--cor-neutra-clara);
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .page-header h1 {
         font-size: 2rem;
     }
-    
+
     .page-header p {
         font-size: 1rem;
     }
-    
+
     .review-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
     }
-    
+
     .company {
         align-self: flex-start;
     }
-    
+
     .reviewer-info {
         width: 100%;
     }
-    
+
     .review-footer {
         flex-direction: column;
         gap: 10px;
         align-items: flex-start;
     }
-    
+
     .review-id {
         align-self: flex-start;
+    }
+
+    .topbar {
+        height: 60px;
+        padding: 0 15px;
+    }
+
+    .nav {
+        gap: 20px;
     }
 }
 
@@ -447,55 +538,60 @@ body {
         height: 60px;
         padding: 0 10px;
     }
-    
+
     .brand {
         font-size: 22px;
     }
-    
+
     .nav {
         gap: 15px;
     }
-    
+
     .nav a {
         font-size: 14px;
     }
-    
+
     .page {
         padding: 30px 0 40px;
     }
-    
+
     .page-header {
         margin-bottom: 30px;
     }
-    
+
     .page-header h1 {
         font-size: 1.8rem;
     }
-    
+
     .review-card {
         padding: 20px;
     }
-    
+
     .reviewer-avatar {
         width: 40px;
         height: 40px;
         font-size: 16px;
     }
-    
+
     .reviewer-name {
         font-size: 1.1rem;
     }
-    
+
     .review-title {
         font-size: 1.2rem;
     }
-    
+
     .simple-filter {
         gap: 8px;
     }
-    
+
     .filter-btn {
         padding: 6px 16px;
         font-size: 13px;
+    }
+
+    .load-more .btn {
+        padding: 10px 24px;
+        font-size: 0.95rem;
     }
 }

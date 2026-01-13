@@ -1,0 +1,27 @@
+:root {
+  /* Cores principais */
+  --cor-primaria: #4f46e5;
+  --cor-primaria-clara: #6366f1;
+  --cor-primaria-escura: #4338ca;
+
+  /* Cores de sentimento */
+  --cor-positiva: #10b981;
+  --cor-positiva-clara: #d1fae5;
+  --cor-neutra: #f59e0b;
+  --cor-neutra-clara: #fef3c7;
+  --cor-negativa: #ef4444;
+  --cor-negativa-clara: #fee2e2;
+
+  /* Cores neutras */
+  --cor-fundo: #f8fafc;
+  --cor-fundo-cartao: #dcdef5;
+  --texto-primario: #1e293b;
+  --texto-secundario: #64748b;
+  --texto-suave: #94a3b8;
+  --cor-borda: #e2e8f0;
+
+    /* Gradientes */
+    --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
+    --btn-amarelo: #f1ec9d;
+    --btn-amarelo-hover: #e8e38c;
+}
