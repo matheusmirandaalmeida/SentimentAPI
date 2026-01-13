@@ -32,7 +32,7 @@ body {
 /* Topbar */
 .topbar {
     height: 70px;
-    background: #4f46e5;
+    background: #0f172a;
     color: #fff;
 }
 
@@ -193,7 +193,7 @@ body {
 
 /* Preview Section - Avaliações Recentes */
 .preview {
-    background: var(--cor-fundo);
+    background: #ededf3;
     padding: 70px 0 90px;
 }
 
@@ -207,6 +207,7 @@ body {
 .preview__panel {
     width: min(700px, 100%);
     margin: 0 auto;
+    border-radius: 10px;
 }
 
 /* Reviews Container */
@@ -223,10 +224,11 @@ body {
 
 /* Individual Review Card */
 .review {
-    background: var(--cor-fundo-cartao);
+    background: #c5c7ed;
     border-bottom: 1px solid var(--cor-borda);
     padding: 1.5rem;
     position: relative;
+    border-radius: 10px;
 }
 
 .review:last-child {
@@ -530,7 +532,7 @@ body {
     min-height: 100px;
     display: flex;
     align-items: center;
-    background: #4f46e5;
+    background: #0f172a;
 }
 
 .footer__inner {

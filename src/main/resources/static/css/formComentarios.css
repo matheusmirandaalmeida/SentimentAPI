@@ -14,7 +14,7 @@
   --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.04);
 
-    --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
+   --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
 }
 
 * {
