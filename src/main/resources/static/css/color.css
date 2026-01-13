@@ -21,7 +21,7 @@
   --cor-borda: #e2e8f0;
 
     /* Gradientes */
-    --gradient-hero: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%);
+    --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
     --btn-amarelo: #f1ec9d;
     --btn-amarelo-hover: #e8e38c;
 }

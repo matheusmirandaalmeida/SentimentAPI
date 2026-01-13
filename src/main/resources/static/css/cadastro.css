@@ -7,9 +7,10 @@
     --sub: rgba(15, 23, 42, .78);
     --shadow: 0 18px 55px rgba(0, 0, 0, .12);
     --shadow2: 0 10px 30px rgba(0, 0, 0, .08);
-    --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, rgba(103, 208, 149, 1) 100%);
-    --btn-color: #f1ec9d;
-    --btn-hover: #e8e38c;
+    --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
+    --btn-color: #f59e0b;
+    --btn-hover: #f3b03c;
+
 }
 
 * {
