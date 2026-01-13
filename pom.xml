@@ -1,70 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+	<!-- Versão do modelo do Maven -->
 	<modelVersion>4.0.0</modelVersion>
 
+	<!-- Spring Boot como parent -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
+
+		<!-- Versão do Spring Boot -->
 		<version>3.5.8</version>
+
 		<relativePath/>
 	</parent>
 
+	<!-- Identificação do projeto -->
 	<groupId>Alura.Hackaton</groupId>
 	<artifactId>SentimentAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SentimentAPI</name>
 	<description>Projeto Hackaton</description>
 
+	<!-- 🔴 AQUI ESTAVA O PROBLEMA -->
 	<properties>
-		<java.version>21</java.version>
+		<!-- Java 17 é compatível com Spring Boot 3.x e Docker -->
+		<java.version>17</java.version>
+
+		<!-- Encoding padrão -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
+	<!-- DEPENDÊNCIAS -->
 	<dependencies>
+
+		<!-- JPA / Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- Segurança -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- Validação -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<!-- Web / REST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- PostgreSQL -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Lombok (opcional) -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 
+		<!-- Testes -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
+	<!-- BUILD -->
 	<build>
+
+		<!-- Recursos -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -73,6 +97,8 @@
 		</resources>
 
 		<plugins>
+
+			<!-- Plugin de recursos -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -82,10 +108,16 @@
 				</configuration>
 			</plugin>
 
+			<!-- COMPILADOR JAVA -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+
+				<!-- Importante deixar explícito -->
 				<configuration>
+					<release>17</release>
+
+					<!-- Lombok -->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -95,10 +127,12 @@
 				</configuration>
 			</plugin>
 
+			<!-- Spring Boot -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<!-- Exclui Lombok do jar final -->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -107,6 +141,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

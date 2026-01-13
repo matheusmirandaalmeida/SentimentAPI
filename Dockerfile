@@ -1,35 +1,43 @@
-# ============ BUILD STAGE ============
-FROM maven:3.9.9-eclipse-temurin-21 AS build
+#############################################
+# ETAPA 1 - BUILD DA APLICAÇÃO (MAVEN)
+#############################################
+
+# Imagem com Maven + Java 17 (padrão Spring Boot atual)
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+
+# Diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar apenas os arquivos necessários primeiro (cache layers)
+# Copia apenas o pom.xml primeiro
+# Isso permite cache de dependências (build mais rápido)
 COPY pom.xml .
+
+# Baixa todas as dependências sem compilar o projeto
+RUN mvn dependency:go-offline
+
+# Copia o código-fonte
 COPY src ./src
 
-# Baixar dependências primeiro (cache layer)
-RUN mvn dependency:go-offline -B
-
-# Compilar e empacotar
+# Compila a aplicação e gera o .jar
+# -DskipTests porque em produção não rodamos testes
 RUN mvn clean package -DskipTests
 
-# ============ RUNTIME STAGE ============
-FROM eclipse-temurin:21-jre-alpine
+
+#############################################
+# ETAPA 2 - IMAGEM FINAL (APENAS JRE)
+#############################################
+
+# Imagem bem mais leve apenas com Java Runtime
+FROM eclipse-temurin:17-jre
+
+# Diretório de trabalho
 WORKDIR /app
 
-# Instalar curl para healthcheck
-RUN apk add --no-cache curl
-
-# Copiar JAR do estágio de build
+# Copia o .jar gerado na etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 
-# Criar usuário não-root para segurança
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
-
+# Porta padrão do Spring Boot
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
-
+# Comando de inicialização do container
 ENTRYPOINT ["java", "-jar", "app.jar"]
