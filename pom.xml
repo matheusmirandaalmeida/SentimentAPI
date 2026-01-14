@@ -25,7 +25,6 @@
 	<name>SentimentAPI</name>
 	<description>Projeto Hackaton</description>
 
-	<!-- 🔴 AQUI ESTAVA O PROBLEMA -->
 	<properties>
 		<!-- Java 17 é compatível com Spring Boot 3.x e Docker -->
 		<java.version>17</java.version>
@@ -132,7 +131,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<!-- Exclui Lombok do jar final -->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
