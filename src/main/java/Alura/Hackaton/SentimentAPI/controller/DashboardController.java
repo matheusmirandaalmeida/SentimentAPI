@@ -1,18 +1,18 @@
-// EM DashboardController.java
 package Alura.Hackaton.SentimentAPI.controller;
 
+import Alura.Hackaton.SentimentAPI.entity.Avaliacao;
 import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.repository.AvaliacaoRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dashboard")
+@CrossOrigin(origins = {"http://localhost:5500", "http://localhost:8080"})
 public class DashboardController {
 
     private final AvaliacaoRepository avaliacaoRepository;
@@ -47,10 +47,9 @@ public class DashboardController {
                 }
             }
 
-            // Aqui é para garantir que a soma sempre dará100%
+            // Ajuste para soma dar 100%
             int soma = porcentagemPositivo + porcentagemNeutro + porcentagemNegativo;
             if (soma != 100 && soma > 0) {
-                // Ajustar o maior valor para que some 100
                 if (porcentagemPositivo >= porcentagemNeutro && porcentagemPositivo >= porcentagemNegativo) {
                     porcentagemPositivo += (100 - soma);
                 } else if (porcentagemNeutro >= porcentagemPositivo && porcentagemNeutro >= porcentagemNegativo) {
@@ -60,8 +59,8 @@ public class DashboardController {
                 }
             }
 
-            // Buscar comentários recentes
-            List<String> comentariosRecentes = buscarComentariosRecentes();
+            // Buscar comentários com sentimento
+            List<Map<String, String>> comentariosComSentimento = buscarComentariosComSentimento();
 
             // Construir resposta
             Map<String, Object> data = new HashMap<>();
@@ -74,69 +73,89 @@ public class DashboardController {
             data.put("total_negativo", totalNegativo);
             data.put("total_pendente", totalPendente);
             data.put("updatedAt", LocalDateTime.now().toString());
-            data.put("comentarios", comentariosRecentes);
+            data.put("comentarios", comentariosComSentimento); // Agora é uma lista de objetos
 
             return ResponseEntity.ok(data);
 
         } catch (Exception e) {
-            // Fallback para dados mockados em caso de erro
-            Map<String, Object> fallbackData = Map.of(
-                    "positivo", 65,
-                    "neutro", 20,
-                    "negativo", 15,
-                    "total", 100,
-                    "total_positivo", 65,
-                    "total_neutro", 20,
-                    "total_negativo", 15,
-                    "total_pendente", 0,
-                    "updatedAt", LocalDateTime.now().toString(),
-                    "comentarios", new String[]{
-                            "Erro ao carregar dados do banco",
-                            "Verifique a conexão com o banco de dados"
-                    }
+            // Fallback com estrutura correta
+            Map<String, Object> fallbackData = new HashMap<>();
+            fallbackData.put("positivo", 65);
+            fallbackData.put("neutro", 20);
+            fallbackData.put("negativo", 15);
+            fallbackData.put("total", 100);
+            fallbackData.put("total_positivo", 65);
+            fallbackData.put("total_neutro", 20);
+            fallbackData.put("total_negativo", 15);
+            fallbackData.put("total_pendente", 0);
+            fallbackData.put("updatedAt", LocalDateTime.now().toString());
+
+            List<Map<String, String>> fallbackComentarios = Arrays.asList(
+                    Map.of("texto", "Erro ao carregar dados do banco", "sentimento", "negativo"),
+                    Map.of("texto", "Verifique a conexão com o banco de dados", "sentimento", "neutro")
             );
+            fallbackData.put("comentarios", fallbackComentarios);
+
             return ResponseEntity.ok(fallbackData);
         }
     }
 
-    private List<String> buscarComentariosRecentes() {
+    private List<Map<String, String>> buscarComentariosComSentimento() {
+        List<Map<String, String>> comentarios = new ArrayList<>();
+
         try {
-            // Buscar últimos 5 comentários de cada tipo
-            List<String> comentarios = new ArrayList<>();
+            // Buscar avaliações com texto não vazio
+            List<Avaliacao> avaliacoes = avaliacaoRepository.findAll()
+                    .stream()
+                    .filter(a -> a.getTexto() != null && !a.getTexto().trim().isEmpty())
+                    .collect(Collectors.toList());
 
-            // Comentários positivos
-            avaliacaoRepository.findTextosBySentimento(
-                    Sentimento.POSITIVO,
-                    org.springframework.data.domain.PageRequest.of(0, 2)
-            ).forEach(comentarios::add);
+            // Adicionar comentários de cada sentimento
+            int contadorPositivo = 0;
+            int contadorNeutro = 0;
+            int contadorNegativo = 0;
+            int maxPorTipo = 3; // Máximo de comentários por tipo
 
-            // Comentários neutros
-            avaliacaoRepository.findTextosBySentimento(
-                    Sentimento.NEUTRO,
-                    org.springframework.data.domain.PageRequest.of(0, 2)
-            ).forEach(comentarios::add);
-
-            // Comentários negativos
-            avaliacaoRepository.findTextosBySentimento(
-                    Sentimento.NEGATIVO,
-                    org.springframework.data.domain.PageRequest.of(0, 1)
-            ).forEach(comentarios::add);
-
-            // Se não houver comentários, retornar mensagem padrão
-            if (comentarios.isEmpty()) {
-                return Arrays.asList(
-                        "Ainda não há avaliações no sistema",
-                        "Seja o primeiro a compartilhar sua experiência!"
-                );
+            for (Avaliacao avaliacao : avaliacoes) {
+                if (avaliacao.getSentimento() == Sentimento.POSITIVO && contadorPositivo < maxPorTipo) {
+                    Map<String, String> comentario = new HashMap<>();
+                    comentario.put("texto", avaliacao.getTexto());
+                    comentario.put("sentimento", "positivo");
+                    comentarios.add(comentario);
+                    contadorPositivo++;
+                } else if (avaliacao.getSentimento() == Sentimento.NEUTRO && contadorNeutro < maxPorTipo) {
+                    Map<String, String> comentario = new HashMap<>();
+                    comentario.put("texto", avaliacao.getTexto());
+                    comentario.put("sentimento", "neutro");
+                    comentarios.add(comentario);
+                    contadorNeutro++;
+                } else if (avaliacao.getSentimento() == Sentimento.NEGATIVO && contadorNegativo < maxPorTipo) {
+                    Map<String, String> comentario = new HashMap<>();
+                    comentario.put("texto", avaliacao.getTexto());
+                    comentario.put("sentimento", "negativo");
+                    comentarios.add(comentario);
+                    contadorNegativo++;
+                }
+                if (contadorPositivo + contadorNeutro + contadorNegativo >= 10) {
+                    break;
+                }
             }
 
-            return comentarios;
+            // Se não houver comentários
+            if (comentarios.isEmpty()) {
+                Map<String, String> comentarioVazio = new HashMap<>();
+                comentarioVazio.put("texto", "Ainda não há avaliações no sistema");
+                comentarioVazio.put("sentimento", "neutro");
+                comentarios.add(comentarioVazio);
+            }
 
         } catch (Exception e) {
-            return Arrays.asList(
-                    "Erro ao carregar comentários",
-                    "Tente novamente mais tarde"
-            );
+            Map<String, String> comentarioErro = new HashMap<>();
+            comentarioErro.put("texto", "Erro ao carregar comentários");
+            comentarioErro.put("sentimento", "negativo");
+            comentarios.add(comentarioErro);
         }
+
+        return comentarios;
     }
 }

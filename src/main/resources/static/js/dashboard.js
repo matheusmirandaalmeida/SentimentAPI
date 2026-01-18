@@ -24,7 +24,7 @@ async function loadDashboardData() {
 
         const token = localStorage.getItem('token');
 
-        // Tenta buscar da API real
+        // Buscar da API real
         const response = await fetch('/api/dashboard', {
             headers: {
                 'Authorization': token ? token : '',
@@ -32,47 +32,70 @@ async function loadDashboardData() {
             }
         });
 
-        let data;
-
-        if (response.ok) {
-            data = await response.json();
-            console.log('Dados da API:', data);
-        } else {
-            // Fallback para dados mockados
-            console.warn('API não disponível, usando dados mockados');
-            data = {
-                positivo: 65,
-                neutro: 20,
-                negativo: 15,
-                total: 100,
-                comentarios: [
-                    { texto: "Excelente serviço, recomendo!", sentimento: "positivo" },
-                    { texto: "Poderia ser melhor", sentimento: "negativo" },
-                    { texto: "Muito satisfeito", sentimento: "positivo" },
-                    { texto: "Não gostei do atendimento", sentimento: "negativo" },
-                    { texto: "Produto de boa qualidade", sentimento: "positivo" },
-                    { texto: "Mais ou menos", sentimento: "neutro" }
-                ]
-            };
+        if (!response.ok) {
+            throw new Error(`Erro na API: ${response.status}`);
         }
 
-        updateMetrics(data);
-        createChart(data);
-        showSummary('positivo', data);
+        const data = await response.json();
+        console.log('Dados da API:', data);
+
+        // Ajustar estrutura dos dados para o frontend
+        const dadosFormatados = {
+            positivo: data.positivo || 0,
+            neutro: data.neutro || 0,
+            negativo: data.negativo || 0,
+            total: data.total || 0,
+            comentarios: formatarComentarios(data.comentarios || [])
+        };
+
+        updateMetrics(dadosFormatados);
+        createChart(dadosFormatados);
+        showSummary('positivo', dadosFormatados);
 
     } catch (error) {
         console.error('Erro ao carregar dados:', error);
-        // Fallback para dados mock em caso de erro
+
+        // Fallback ajustado para estrutura correta
         const fallbackData = {
             positivo: 45,
             neutro: 30,
             negativo: 25,
             total: 100,
-            comentarios: []
+            comentarios: [
+                { texto: "Sistema offline. Verifique a conexão.", sentimento: "negativo" },
+                { texto: "Dados de teste sendo exibidos", sentimento: "neutro" }
+            ]
         };
         updateMetrics(fallbackData);
         createChart(fallbackData);
+        showSummary('positivo', fallbackData);
     }
+}
+
+function formatarComentarios(comentariosAPI) {
+    console.log('Formatando comentários da API:', comentariosAPI);
+
+    if (!comentariosAPI || comentariosAPI.length === 0) {
+        return [];
+    }
+
+    // Se já for array de objetos com texto e sentimento
+    if (Array.isArray(comentariosAPI) && comentariosAPI[0] && comentariosAPI[0].texto !== undefined) {
+        return comentariosAPI.map(c => ({
+            texto: c.texto || c,
+            sentimento: c.sentimento || "neutro"
+        }));
+    }
+
+    // Se for array de strings (legado)
+    if (Array.isArray(comentariosAPI) && typeof comentariosAPI[0] === 'string') {
+        return comentariosAPI.map(texto => ({
+            texto: texto,
+            sentimento: "neutro" // default
+        }));
+    }
+
+    return [];
 }
 
 function updateMetrics(data) {
@@ -145,20 +168,18 @@ function createChart(data) {
                 if (elements.length > 0) {
                     const index = elements[0].index;
                     const sentiments = ['positivo', 'neutro', 'negativo'];
-                    const mockData = {
-                        positivo: 65,
-                        neutro: 20,
-                        negativo: 15,
-                        total: 100,
-                        comentarios: [
-                            { texto: "Excelente serviço, recomendo!", sentimento: "positivo" },
-                            { texto: "Poderia ser melhor", sentimento: "negativo" },
-                            { texto: "Muito satisfeito", sentimento: "positivo" }
-                        ]
-                    };
-                    showSummary(sentiments[index], mockData);
 
-                    // Destacar card selecionado
+                    // Usar dados reais do gráfico
+                    const chartData = window.sentimentChart.data.datasets[0].data;
+                    const dadosAtuais = {
+                        positivo: chartData[0],
+                        neutro: chartData[1],
+                        negativo: chartData[2],
+                        total: data.total || 0,
+                        comentarios: data.comentarios || []
+                    };
+
+                    showSummary(sentiments[index], dadosAtuais);
                     highlightCard(sentiments[index]);
                 }
             }
@@ -167,7 +188,7 @@ function createChart(data) {
 }
 
 function showSummary(sentiment, data) {
-    console.log('Mostrando resumo para:', sentiment);
+    console.log('Mostrando resumo para:', sentiment, 'com', data.comentarios?.length, 'comentários');
 
     const tituloMap = {
         'positivo': 'Comentários Positivos',
@@ -187,23 +208,34 @@ function showSummary(sentiment, data) {
         tituloElement.textContent = tituloMap[sentiment] || 'Resumo';
     }
 
-    // Atualizar info
+    // Atualizar info com dados REAIS do banco
     const infoElement = document.getElementById('info-resumo');
     if (infoElement) {
         const porcentagem = data[sentiment] || 0;
-        const totalMensagens = Math.round(data.total * porcentagem / 100);
-        infoElement.textContent = `${porcentagem}% do total (${totalMensagens} mensagens)`;
+
+        // Calcular número de mensagens baseado no total e porcentagem
+        const totalMensagens = Math.round((data.total * porcentagem) / 100);
+
+        // Ou usar contagem direta dos comentários filtrados
+        const comentariosFiltrados = data.comentarios.filter(c =>
+            c.sentimento && c.sentimento.toLowerCase() === sentiment.toLowerCase()
+        );
+        const contagemReal = comentariosFiltrados.length;
+
+        infoElement.textContent = `${porcentagem}% do total (${contagemReal > 0 ? contagemReal : totalMensagens} mensagens)`;
     }
 
-    // Atualizar lista
+    // Atualizar lista com dados REAIS
     const lista = document.getElementById('lista-resumo');
     if (lista) {
         lista.innerHTML = '';
 
-        // Filtrar comentários pelo sentimento
-        const comentariosFiltrados = data.comentarios
-            ? data.comentarios.filter(c => c.sentimento === sentiment)
-            : [];
+        // Filtrar comentários pelo sentimento (case insensitive)
+        const comentariosFiltrados = data.comentarios.filter(c =>
+            c.sentimento && c.sentimento.toLowerCase() === sentiment.toLowerCase()
+        );
+
+        console.log(`Comentários ${sentiment} encontrados:`, comentariosFiltrados.length);
 
         if (comentariosFiltrados.length === 0) {
             const li = document.createElement('li');
@@ -214,11 +246,26 @@ function showSummary(sentiment, data) {
             `;
             lista.appendChild(li);
         } else {
-            comentariosFiltrados.slice(0, 5).forEach(comentario => {
+            comentariosFiltrados.slice(0, 10).forEach((comentario, index) => {
                 const li = document.createElement('li');
-                li.textContent = comentario.texto;
+                li.className = 'item-comentario';
+                li.innerHTML = `
+                    <span class="numero-comentario">${index + 1}.</span>
+                    <span class="texto-comentario">${comentario.texto}</span>
+                `;
                 lista.appendChild(li);
             });
+
+            // Mostrar mensagem se houver mais comentários
+            if (comentariosFiltrados.length > 10) {
+                const li = document.createElement('li');
+                li.className = 'mais-comentarios';
+                li.innerHTML = `
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>... e mais ${comentariosFiltrados.length - 10} comentários</span>
+                `;
+                lista.appendChild(li);
+            }
         }
     }
 
@@ -256,19 +303,8 @@ function setupEventListeners() {
             // Mostrar qual está ativo
             highlightCard(sentiment);
 
-            // Atualizar resumo
-            const mockData = {
-                positivo: 65,
-                neutro: 20,
-                negativo: 15,
-                total: 100,
-                comentarios: [
-                    { texto: "Excelente serviço, recomendo!", sentimento: "positivo" },
-                    { texto: "Poderia ser melhor", sentimento: "negativo" },
-                    { texto: "Muito satisfeito", sentimento: "positivo" }
-                ]
-            };
-            showSummary(sentiment, mockData);
+            // Recarregar dados do banco
+            fetchDashboardData(sentiment);
         });
     });
 
@@ -278,21 +314,8 @@ function setupEventListeners() {
             const sentiment = this.dataset.sentimento;
             console.log('Etiqueta clicada:', sentiment);
 
-            const mockData = {
-                positivo: 65,
-                neutro: 20,
-                negativo: 15,
-                total: 100,
-                comentarios: [
-                    { texto: "Excelente serviço, recomendo!", sentimento: "positivo" },
-                    { texto: "Poderia ser melhor", sentimento: "negativo" },
-                    { texto: "Muito satisfeito", sentimento: "positivo" }
-                ]
-            };
-            showSummary(sentiment, mockData);
-
-            // Destacar card correspondente
-            highlightCard(sentiment);
+            // Recarregar dados do banco
+            fetchDashboardData(sentiment);
         });
     });
 
@@ -301,7 +324,8 @@ function setupEventListeners() {
     if (tempoSelect) {
         tempoSelect.addEventListener('change', function() {
             console.log('Período selecionado:', this.value);
-            // Aqui você pode carregar dados diferentes baseado no período
+            // Recarregar dados
+            loadDashboardData();
         });
     }
 
@@ -313,24 +337,37 @@ function setupEventListeners() {
         localStorage.removeItem('userEmail');
         window.location.href = '/';
     };
-
-    // Botões de ação
-    document.querySelectorAll('.botao-acao').forEach(botao => {
-        botao.addEventListener('click', function() {
-            const texto = this.textContent.trim();
-            console.log('Botão clicado:', texto);
-
-            if (texto.includes('Exportar')) {
-                alert('Funcionalidade de exportação em desenvolvimento!');
-            } else if (texto.includes('Ver Detalhes')) {
-                alert('Redirecionando para detalhes...');
-                // Aqui você pode redirecionar para uma página de detalhes
-            }
-        });
-    });
 }
 
-// Inicialização alternativa se o DOM já estiver carregado
+// Função auxiliar para buscar dados do dashboard
+async function fetchDashboardData(sentiment) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/dashboard', {
+            headers: {
+                'Authorization': token ? token : '',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Erro na API');
+
+        const data = await response.json();
+        const dadosFormatados = {
+            positivo: data.positivo || 0,
+            neutro: data.neutro || 0,
+            negativo: data.negativo || 0,
+            total: data.total || 0,
+            comentarios: formatarComentarios(data.comentarios || [])
+        };
+
+        showSummary(sentiment, dadosFormatados);
+        highlightCard(sentiment);
+    } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+    }
+}
+
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
     setTimeout(() => {
         const token = localStorage.getItem('token');
