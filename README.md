@@ -311,6 +311,7 @@ Comportamento esperado:
 ## Autores
 Projeto desenvolvido para o Hackathon Oracle & Alura.
 
+- Christian William
 - Diego Santos
 - Matheus Miranda Almeida
 - Pedro Machado
