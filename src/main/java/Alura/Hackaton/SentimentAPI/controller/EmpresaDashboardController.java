@@ -1,8 +1,10 @@
 package Alura.Hackaton.SentimentAPI.controller;
 
 import Alura.Hackaton.SentimentAPI.entity.Avaliacao;
+import Alura.Hackaton.SentimentAPI.entity.Usuario;
 import Alura.Hackaton.SentimentAPI.enun.Sentimento;
 import Alura.Hackaton.SentimentAPI.repository.AvaliacaoRepository;
+import Alura.Hackaton.SentimentAPI.repository.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,28 +13,55 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/dashboard")
+@RequestMapping("/api/dashboard/empresa")
 @CrossOrigin(origins = {"http://localhost:5500", "http://localhost:8080"})
-public class DashboardController {
+public class EmpresaDashboardController {
 
     private final AvaliacaoRepository avaliacaoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public DashboardController(AvaliacaoRepository avaliacaoRepository) {
+    public EmpresaDashboardController(AvaliacaoRepository avaliacaoRepository,
+                                      UsuarioRepository usuarioRepository) {
         this.avaliacaoRepository = avaliacaoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> getDashboardData(
-            @RequestParam(required = false) String empresaFiltro) {
+    @GetMapping("/minha-empresa")
+    public ResponseEntity<Map<String, Object>> getDashboardMinhaEmpresa(
+            @RequestHeader(value = "Authorization", required = false) String token) {
 
         try {
-            List<Avaliacao> avaliacoes;
+            // Extrair email do token (implementação simplificada)
+            String userEmail = extractEmailFromToken(token);
 
-            if(empresaFiltro != null && !empresaFiltro.isBlank()) {
-                avaliacoes = avaliacaoRepository.searchByEmpresa(empresaFiltro);
-            } else {
-                avaliacoes =  avaliacaoRepository.findAll();
+            if (userEmail == null) {
+                return ResponseEntity.status(401).body(Map.of(
+                        "erro", "Token de autenticação inválido ou ausente"
+                ));
             }
+
+            // Buscar usuário
+            Usuario usuario = usuarioRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+            // Verificar se é empresa
+            if (!"EMPRESA".equals(usuario.getTipoUsuario())) {
+                return ResponseEntity.status(403).body(Map.of(
+                        "erro", "Acesso negado. Apenas empresas podem acessar este dashboard"
+                ));
+            }
+
+            // Usar nome da empresa do usuário para filtrar
+            String nomeEmpresa = usuario.getNomeEmpresa();
+
+            if (nomeEmpresa == null || nomeEmpresa.isBlank()) {
+                return ResponseEntity.status(400).body(Map.of(
+                        "erro", "Nome da empresa não cadastrado"
+                ));
+            }
+
+            // Buscar avaliações da empresa
+            List<Avaliacao> avaliacoes = avaliacaoRepository.searchByEmpresa(nomeEmpresa);
 
             // Contagem total
             long totalAvaliacoes = avaliacoes.size();
@@ -77,62 +106,68 @@ public class DashboardController {
                 }
             }
 
-            // Buscar comentarios com sentimento
+            // Buscar comentários com sentimento
             List<Map<String, String>> comentariosComSentimento = buscarComentariosComSentimento(avaliacoes);
 
             // Construir resposta
-            Map<String, Object> data = new HashMap<>();
-            data.put("positivo", porcentagemPositivo);
-            data.put("neutro", porcentagemNeutro);
-            data.put("negativo", porcentagemNegativo);
-            data.put("total", totalAvaliacoes);
-            data.put("total_positivo", totalPositivo);
-            data.put("total_neutro", totalNeutro);
-            data.put("total_negativo", totalNegativo);
-            data.put("total_pendente", totalPendente);
-            data.put("empresa_filtro", empresaFiltro);
-            data.put("updatedAt", LocalDateTime.now().toString());
-            data.put("comentarios", comentariosComSentimento);
+            Map<String, Object> response = new HashMap<>();
+            response.put("empresa", nomeEmpresa);
+            response.put("cnpj", usuario.getCnpj());
+            response.put("email", usuario.getEmail());
+            response.put("positivo", porcentagemPositivo);
+            response.put("neutro", porcentagemNeutro);
+            response.put("negativo", porcentagemNegativo);
+            response.put("total", totalAvaliacoes);
+            response.put("total_positivo", totalPositivo);
+            response.put("total_neutro", totalNeutro);
+            response.put("total_negativo", totalNegativo);
+            response.put("total_pendente", totalPendente);
+            response.put("updatedAt", LocalDateTime.now().toString());
+            response.put("comentarios", comentariosComSentimento);
 
-            return ResponseEntity.ok(data);
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            // Fallback com estrutura correta
-            Map<String, Object> fallbackData = new HashMap<>();
-            fallbackData.put("positivo", 65);
-            fallbackData.put("neutro", 20);
-            fallbackData.put("negativo", 15);
-            fallbackData.put("total", 100);
-            fallbackData.put("total_positivo", 65);
-            fallbackData.put("total_neutro", 20);
-            fallbackData.put("total_negativo", 15);
-            fallbackData.put("total_pendente", 0);
-            fallbackData.put("updatedAt", LocalDateTime.now().toString());
-
-            List<Map<String, String>> fallbackComentarios = Arrays.asList(
-                    Map.of("texto", "Erro ao carregar dados do banco", "sentimento", "negativo"),
-                    Map.of("texto", "Verifique a conexão com o banco de dados", "sentimento", "neutro")
-            );
-            fallbackData.put("comentarios", fallbackComentarios);
-
-            return ResponseEntity.ok(fallbackData);
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "erro", "Erro interno ao processar requisição: " + e.getMessage()
+            ));
         }
     }
 
+    private String extractEmailFromToken(String token) {
+        if (token == null || !token.startsWith("fake-jwt-token-")) {
+            return null;
+        }
+
+        try {
+            String[] parts = token.split("-");
+            if (parts.length >= 4) {
+                String userId = parts[3];
+
+                // Buscar usuário pelo ID para obter email
+                Optional<Usuario> usuario = usuarioRepository.findById(Long.parseLong(userId));
+                return usuario.map(Usuario::getEmail).orElse(null);
+            }
+        } catch (Exception e) {
+            // Em caso de erro, retornar null
+        }
+
+        return null;
+    }
+
     private List<Map<String, String>> buscarComentariosComSentimento(List<Avaliacao> avaliacoes) {
+        // Mesma implementação do DashboardController
         List<Map<String, String>> comentarios = new ArrayList<>();
 
         try {
-            // Filtrar avaliacoes
             List<Avaliacao> avaliacoesComTexto = avaliacoes.stream()
                     .filter(a -> a.getTexto() != null && !a.getTexto().trim().isEmpty())
                     .collect(Collectors.toList());
 
-            // Adicionar comentarios de cada sentimento
             int contadorPositivo = 0;
             int contadorNeutro = 0;
             int contadorNegativo = 0;
-            int maxPorTipo = 3; // Maximo de comentários por tipo
+            int maxPorTipo = 3;
 
             for (Avaliacao avaliacao : avaliacoesComTexto) {
                 if (avaliacao.getSentimento() == Sentimento.POSITIVO && contadorPositivo < maxPorTipo) {
@@ -159,10 +194,9 @@ public class DashboardController {
                 }
             }
 
-            // Se nao houver comentarios
             if (comentarios.isEmpty()) {
                 Map<String, String> comentarioVazio = new HashMap<>();
-                comentarioVazio.put("texto", "Ainda não há avaliações no sistema");
+                comentarioVazio.put("texto", "Ainda não há avaliações para esta empresa");
                 comentarioVazio.put("sentimento", "neutro");
                 comentarios.add(comentarioVazio);
             }

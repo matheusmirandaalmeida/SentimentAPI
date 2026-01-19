@@ -62,7 +62,10 @@ public class DataExportService {
             Usuario admin = new Usuario(
                     "admin@Sentiment.com",
                     encoder.encode("admin123"),
-                    "ADMIN"
+                    "ADMIN",
+                    "INDIVIDUAL",
+                    null,
+                    null
             );
             usuarioRepository.save(admin);
             log.info("Criando administracao com sucesso");

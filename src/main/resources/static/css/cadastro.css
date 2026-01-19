@@ -10,7 +10,10 @@
     --primary-gradient: linear-gradient(135deg, rgba(118, 151, 152, 0.53) 0%, #0f172a 100%);
     --btn-color: #f59e0b;
     --btn-hover: #f3b03c;
-
+    --empresa-color: #3b82f6;
+    --empresa-hover: #2563eb;
+    --individual-color: #10b981;
+    --individual-hover: #059669;
 }
 
 * {
@@ -38,12 +41,15 @@ body {
 
 .auth-card {
     width: 100%;
-    max-width: 460px;
+    max-width: 500px;
     background: var(--bg);
     border-radius: 12px;
     box-shadow: var(--shadow);
     padding: 40px 36px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .auth-header {
@@ -76,10 +82,106 @@ body {
     line-height: 1.4;
 }
 
+/* Tipo de Usuário */
+.tipo-usuario-options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.radio-option {
+    flex: 1;
+    cursor: pointer;
+}
+
+.radio-option input {
+    display: none;
+}
+
+.radio-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 0.8rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.2s;
+    text-align: center;
+    height: 100%;
+}
+
+.radio-option input:checked + .radio-label {
+    border-color: var(--empresa-color);
+    background-color: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.radio-option:nth-child(1) input:checked + .radio-label {
+    border-color: var(--individual-color);
+    background-color: #ecfdf5;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.radio-label i {
+    font-size: 1.8rem;
+    color: #6b7280;
+    margin-bottom: 0.8rem;
+}
+
+.radio-option input:checked + .radio-label i {
+    color: var(--empresa-color);
+}
+
+.radio-option:nth-child(1) input:checked + .radio-label i {
+    color: var(--individual-color);
+}
+
+.radio-label span {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+}
+
+.radio-label small {
+    font-size: 0.75rem;
+    color: #6b7280;
+    line-height: 1.3;
+}
+
+/* Campos específicos para empresa */
+.campos-empresa {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+    animation: fadeIn 0.3s ease;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.campos-empresa.show {
+    opacity: 1;
+    max-height: 300px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Formulário */
 .auth-form {
     display: grid;
     gap: 22px;
+    flex: 1;
 }
 
 .form-group {
@@ -92,6 +194,16 @@ body {
     font-weight: 600;
     color: var(--text);
     letter-spacing: 0.2px;
+}
+
+.form-label:after {
+    content: " *";
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.form-label:not(:has(+ .form-input[required])):after {
+    content: "";
 }
 
 .form-input {
@@ -143,7 +255,6 @@ body {
     line-height: 1.4;
 }
 
-/* Botão */
 .auth-button {
     width: 100%;
     height: 46px;
@@ -182,7 +293,6 @@ body {
     box-shadow: none;
 }
 
-/* Mensagens */
 .message {
     padding: 14px 18px;
     border-radius: 8px;
@@ -206,11 +316,39 @@ body {
     display: block;
 }
 
+/* Termos e condições */
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.terms-checkbox input {
+    margin-top: 3px;
+    accent-color: #111827;
+    min-width: 16px;
+}
+
+.terms-checkbox label {
+    font-size: 12.5px;
+    color: var(--sub);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.terms-checkbox a {
+    color: #111827;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
 .auth-footer {
     text-align: center;
     margin-top: 28px;
     padding-top: 24px;
     border-top: 1px solid #e5e7eb;
+    width: 100%;
 }
 
 .auth-footer p {
@@ -243,7 +381,25 @@ body {
     font-weight: 500;
 }
 
-/* Spinner */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sub);
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 16px;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--text);
+}
+
+.back-link i {
+    font-size: 12px;
+}
+
 .spinner {
     display: inline-block;
     width: 20px;
@@ -289,6 +445,11 @@ body {
         gap: 18px;
     }
 
+    .tipo-usuario-options {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
     .form-input {
         height: 44px;
     }
@@ -310,45 +471,28 @@ body {
     .auth-logo {
         font-size: 28px;
     }
+
+    .radio-label {
+        padding: 1rem 0.6rem;
+    }
+
+    .radio-label i {
+        font-size: 1.5rem;
+    }
 }
 
-/* Link para voltar */
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--sub);
-    text-decoration: none;
-    font-size: 14px;
-    margin-top: 12px;
-    transition: color 0.2s;
+.required-star {
+    color: #ef4444;
+    font-weight: bold;
 }
 
-.back-link:hover {
-    color: var(--text);
+.info-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.3rem;
 }
 
-/* Checkbox de termos */
-.terms-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-top: 8px;
-}
-
-.terms-checkbox input {
-    margin-top: 3px;
-    accent-color: #111827;
-}
-
-.terms-checkbox label {
-    font-size: 12.5px;
-    color: var(--sub);
-    line-height: 1.4;
-}
-
-.terms-checkbox a {
-    color: #111827;
-    text-decoration: underline;
-    font-weight: 500;
+#cnpj, #telefone {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
 }
