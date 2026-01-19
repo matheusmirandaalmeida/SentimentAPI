@@ -1,8 +1,5 @@
-#############################################
 # ETAPA 1 - BUILD DA APLICAÇÃO (MAVEN)
-#############################################
-
-# Imagem com Maven + Java 17 (padrão Spring Boot atual)
+# Imagem com Maven + Java 17
 FROM maven:3.9.9-eclipse-temurin-17 AS build
 
 # Diretório de trabalho dentro do container
@@ -25,7 +22,6 @@ RUN mvn clean package -DskipTests
 
 #############################################
 # ETAPA 2 - IMAGEM FINAL (APENAS JRE)
-#############################################
 
 # Imagem bem mais leve apenas com Java Runtime
 FROM eclipse-temurin:17-jre

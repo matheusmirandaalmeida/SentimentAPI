@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:15
@@ -36,7 +38,10 @@ services:
       SPRING_DATASOURCE_USERNAME: sentiment
       SPRING_DATASOURCE_PASSWORD: sentiment
       DS_SERVICE_BASE_URL: http://ds-service:8000
+    volumes:
+      - ./src/main/resources/static:/app/classes/static:ro
     restart: unless-stopped
+
 
 volumes:
   postgres_data:
