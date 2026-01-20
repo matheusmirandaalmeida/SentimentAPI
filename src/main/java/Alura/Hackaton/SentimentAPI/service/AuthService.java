@@ -26,43 +26,72 @@ public class AuthService {
     }
 
     public void register(RegisterRequest req) {
-        log.info("Tentativa de registro para email: {}", req.getEmail());
+        log.info("Tentativa de registro: email={}, tipo={}", req.getEmail(), req.getTipoUsuario());
 
+        // Validação de email - se já existe
         if (repository.existsByEmail(req.getEmail())) {
             throw new BusinessException("Email já cadastrado");
         }
 
-        // Usuários registrados normalmente são USER, não ADMIN
+        // Validação para empresa - se já existe
+        if ("EMPRESA".equals(req.getTipoUsuario()) && req.getCnpj() != null) {
+            if (repository.existsByCnpj(req.getCnpj())) {
+                throw new BusinessException("CNPJ já cadastrado");
+            }
+        }
+
+        // Validação de campos para empresa
+        if ("EMPRESA".equals(req.getTipoUsuario())) {
+            if (req.getNomeEmpresa() == null || req.getNomeEmpresa().isBlank()) {
+                throw new BusinessException("Nome da empresa é obrigatório");
+            }
+            if (req.getCnpj() == null || req.getCnpj().isBlank()) {
+                throw new BusinessException("CNPJ é obrigatório para empresas");
+            }
+        }
+
+        // Determinar role baseado no tipo de usuário
+        String role = "EMPRESA".equals(req.getTipoUsuario()) ? "EMPRESA" : "USER";
+
+        // Criar usuário
         Usuario usuario = new Usuario(
                 req.getEmail(),
                 encoder.encode(req.getSenha()),
-                "USER"
+                role,
+                req.getTipoUsuario(),
+                req.getNomeEmpresa(),
+                req.getCnpj()
         );
+
         repository.save(usuario);
 
-        // Exporta dados atualizados para JSON
+        // Exporta dados atualizados
         dataExportService.exportarDadosParaJson();
 
-        log.info("Usuário registrado com sucesso: {}", req.getEmail());
+        log.info("Usuário registrado com sucesso: {} (tipo: {}, role: {})",
+                req.getEmail(), req.getTipoUsuario(), role);
     }
 
     public AuthResponse login(LoginRequest req) {
-        log.info("Tentativa de login para email: {}", req.getEmail());
+        log.info("Tentativa de login: {}", req.getEmail());
 
         Usuario usuario = repository.findByEmail(req.getEmail())
                 .orElseThrow(() -> new BusinessException("Email ou senha inválidos"));
 
         if (!encoder.matches(req.getSenha(), usuario.getSenha())) {
-            log.warn("Tentativa de login com senha incorreta para: {}", req.getEmail());
+            log.warn("Tentativa de login com senha incorreta: {}", req.getEmail());
             throw new BusinessException("Email ou senha inválidos");
         }
 
-        // Gera token com role
+        // Gera token com role e tipo de usuário
         String token = "fake-jwt-token-" + usuario.getId() + "-" +
-                usuario.getRole() + "-" + System.currentTimeMillis();
+                usuario.getRole() + "-" + usuario.getTipoUsuario() + "-" +
+                System.currentTimeMillis();
 
-        log.info("Login bem-sucedido para: {} (role: {})", req.getEmail(), usuario.getRole());
+        log.info("Login bem-sucedido: {} (role: {}, tipo: {})",
+                req.getEmail(), usuario.getRole(), usuario.getTipoUsuario());
 
-        return new AuthResponse(token, usuario.getRole());
+        return new AuthResponse(token, usuario.getRole(), usuario.getTipoUsuario(),
+                usuario.getNomeEmpresa());
     }
 }

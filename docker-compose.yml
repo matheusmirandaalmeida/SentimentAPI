@@ -1,5 +1,6 @@
-services:
+version: '3.8'
 
+services:
   postgres:
     image: postgres:15
     container_name: sentiment-postgres
@@ -8,10 +9,12 @@ services:
       POSTGRES_USER: sentiment
       POSTGRES_PASSWORD: sentiment
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Mudado para 5433 para não conflitar com PostgreSQL local
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - sentiment-network
 
   ds-service:
     build:
@@ -21,6 +24,8 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+    networks:
+      - sentiment-network
 
   backend:
     build:
@@ -36,7 +41,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sentimentdb
       SPRING_DATASOURCE_USERNAME: sentiment
       SPRING_DATASOURCE_PASSWORD: sentiment
+      DS_SERVICE_BASE_URL: http://ds-service:8000
+      SPRING_PROFILES_ACTIVE: docker  # Novo perfil para Docker
     restart: unless-stopped
+    networks:
+      - sentiment-network
 
 volumes:
   postgres_data:
+
+networks:
+  sentiment-network:
+    driver: bridge
