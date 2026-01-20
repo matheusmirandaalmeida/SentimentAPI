@@ -1,16 +1,7 @@
-# API
 fastapi==0.111.0
 uvicorn[standard]==0.30.0
-
-# Machine Learning / NLP
 torch
 transformers==4.40.1
 scikit-learn==1.6.1
-
-# Data processing
 numpy==1.26.4
-pandas==2.2.2
-
-# Tradução automática (opcional, mas válido no projeto)
 deep-translator==1.11.4
-
