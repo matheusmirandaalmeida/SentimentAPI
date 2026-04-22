@@ -62,6 +62,7 @@ public class DataExportService {
             Usuario admin = new Usuario(
                     "admin@Sentiment.com",
                     encoder.encode("admin123"),
+                    "ADMIN",
                     "ADMIN"
             );
             usuarioRepository.save(admin);
